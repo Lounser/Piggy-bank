@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piggy Bank - Настройки</title>
+    <link rel="stylesheet" href="styles/settings.css">
+    <link rel="stylesheet" href="styles/reset.css">
+    <link rel="icon" href="https://img.icons8.com/?size=100&id=qtBZBdsTFtlT&format=png&color=000000" type="image/png">
+    <script defer src="scripts/settings.js"></script>
+</head>
+<body>
+    <header>
+        <nav id="navigation">
+            <ul>
+                <li><a href="/my-piggy-bank/profile.html"><img src="https://img.icons8.com/?size=100&id=R2rV4MQlV0ot&format=png&color=000000" alt="Профиль" width="24" height="24">Профиль</a></li>
+                <li><a href="/my-piggy-bank/index.html"><img src="https://img.icons8.com/?size=100&id=jDwpGuHnarDq&format=png&color=000000" alt="Главная" width="24" height="24">Главная</a></li>
+                <li><a href="/my-piggy-bank/settings.html"><img src="https://img.icons8.com/?size=100&id=N1xaXJg6g2Eq&format=png&color=000000" alt="Настройки" width="24" height="24">Настройки</a></li>
+            </ul>
+        </nav>
+        <div class="theme-switch">
+            <input type="checkbox" id="theme-switch-checkbox">
+            <label for="theme-switch-checkbox">Темная тема</label>
+        </div>
+    </header>
+
+    <main>
+        <section id="settings">
+            <h2>Настройки</h2>
+            <div class="setting">
+                <label for="disable-profile-charts">Выключить графики на странице профиля:</label>
+                <input type="checkbox" id="disable-profile-charts">
+            </div>
+            <div class="setting">
+                <label for="disable-transaction-charts">Выключить графики истории транзакций:</label>
+                <input type="checkbox" id="disable-transaction-charts">
+            </div>
+            <div class="setting">
+                <label for="username">Имя пользователя:</label>
+                <input type="text" id="username" placeholder="Введите ваше имя">
+            </div>
+            <div class="setting">
+                <label for="user-icon">Выберите иконку пользователя:</label>
+                <label for="user-image-upload">Загрузите свою иконку:</label><br>
+                <input type="file" id="user-image-upload" accept="image/*">
+                <img id="user-image-preview" src="#" alt="Предпросмотр" style="max-width: 100px; max-height: 100px; display: none;">
+                </select>
+            </div>
+            </div>
+            <button id="save-settings">Сохранить настройки</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My Piggy Bank. Все права защищены.</p>
+        <p>Сделано в Волжском Политихеническом Техникуме.</p>
+    </footer>
+
+    <script src="scripts/settings.js"></script> 
+</body>
+</html>
