@@ -1,25 +1,31 @@
-/* styles/home.css */
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap");
+:root {
+  --primary-color: #f3ad21; /* Определяем основной цвет для удобного изменения */
+  --background-color: #f4f4f4;
+  --text-color: #333;
+}
+
 body {
   font-family: "Rubik Mono One", monospace;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f4f4f4;
-  color: #333;
-  min-height: 100vh; /* Ensure body takes full viewport height */
-  margin: 0; /* Remove default margin */
-  padding: 0; /* Remove default padding */
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
   font-size: 0.9rem;
 }
 
-/* Navigation */
+/* Стили навигации */
 #navigation {
-  padding: 40px 20px; /* Reduced padding */
+  padding: 40px 20px;
   display: flex;
-  width: 100%; /* Make navigation full width */
-  box-sizing: border-box; /* Include padding in element width */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #navigation ul {
@@ -34,7 +40,6 @@ body {
 #navigation li {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   justify-content: center;
   align-items: center;
   margin: 0 10px;
@@ -43,15 +48,16 @@ body {
 
 #navigation a {
   text-decoration: none;
-  color: #333;
+  color: var(--text-color);
   transition: color 0.3s ease;
   display: block;
 }
 
 #navigation a:hover {
-  color: #FFC107;
+  color: var(--primary-color);
 }
 
+/* Стили переключателя тем */
 .theme-switch {
   display: flex;
   align-items: center;
@@ -63,14 +69,6 @@ body {
   display: none;
 }
 
-main {
-  flex: 1 0 auto;
-  gap: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-}
-
 .theme-switch label {
   cursor: pointer;
   padding: 5px 10px;
@@ -79,11 +77,20 @@ main {
 }
 
 .theme-switch input[type=checkbox]:checked + label {
-  background-color: #f3ad21;
+  background-color: var(--primary-color);
 }
 
-section {
+main {
+  flex: 1 0 auto;
+  gap: 1.25rem;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
+}
+
+/* Стили секций */
+section {
+  padding: 50px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: #fff;
@@ -91,7 +98,6 @@ section {
   justify-content: center;
   flex-direction: column;
   gap: 20px;
-  padding: 50px;
   line-height: 30px;
   font-size: 1.3rem;
 }
@@ -102,6 +108,7 @@ section {
   margin-top: 30px;
 }
 
+/* Стили секции "Hero" */
 .hero {
   text-align: center;
   padding: 40px 0;
@@ -118,10 +125,11 @@ section {
   margin-bottom: 20px;
 }
 
-#save-settings {
+/* Стили кнопок */
+button {
   display: inline-block;
-  padding: 15px 30px;
-  background-color: #f3ad21;
+  padding: 7px 30px;
+  background-color: var(--primary-color);
   color: white;
   text-decoration: none;
   border-radius: 5px;
@@ -132,15 +140,39 @@ section {
   background-color: #eea30d;
 }
 
-/* Dark Mode Styles */
+/* Стили FAQ */
+#faq {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 50px;
+  line-height: 30px;
+  font-size: clamp(0.8rem, 1.04vw, 1.04rem);
+}
+
+.faq-answer {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.faq-answer.show {
+  display: block;
+  opacity: 1;
+}
+
+/* Стили темной темы */
 body.dark {
   background-color: #212121;
   color: #fff;
+  --background-color: #212121;
+  --text-color: #fff;
 }
 
 body.dark section {
   background-color: #303030;
-  color: #fff;
 }
 
 body.dark .action-button {
@@ -148,21 +180,10 @@ body.dark .action-button {
 }
 
 body.dark .action-button:hover {
-  background-color: #f3ad21;
+  background-color: var(--primary-color);
 }
 
-body.dark #navigation a {
-  color: #fff;
-}
-
-body.dark #navigation a:hover {
-  color: #FFC107;
-}
-
-body.dark footer {
-  background-color: #1a1a1a;
-}
-
+/* Стили футера */
 footer {
   display: flex;
   justify-content: center;
@@ -180,21 +201,8 @@ footer {
   border-top: 1px solid #333;
 }
 
+/* Адаптивные стили */
 @media screen and (max-width: 600px) {
-  section {
-    padding: 20px;
-  }
-  .hero h2 {
-    font-size: 1.5em;
-  }
-  .hero p {
-    font-size: 1em;
-  }
-  #save-settings {
-    padding: 10px 20px;
-  }
-}
-@media screen and (max-width: 498px) {
   body {
     overflow-x: hidden;
     justify-content: center;
@@ -225,4 +233,48 @@ footer {
   footer {
     font-size: 0.75em;
   }
+}
+.faq-answer {
+  display: none; /* Скрываем по умолчанию */
+  word-break: break-word; /* Разрыв слов при необходимости */
+  overflow-wrap: break-word; /* Дополнительное свойство для надежности */
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  width: calc(100% - 20px); /* Ширина, с учетом отступов */
+  overflow-y: auto;
+}
+
+.faq-answer p {
+  max-width: 90%; /* Ограничение ширины текста */
+  margin: 0 auto; /* Центрирование текста по горизонтали */
+  word-wrap: break-word; /* Разрыв слов при необходимости */
+}
+
+.faq-answer.show {
+  display: block; /* Показываем, если есть класс 'show' */
+}
+
+.file-upload {
+  position: relative; /* Necessary for absolute positioning of the input */
+  display: inline-block;
+}
+
+.file-upload-label {
+  display: inline-block;
+  padding: 5px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.875em;
+}
+
+.file-upload input[type=file] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0; /* Hide the default input */
+  width: 100%;
+  height: 100%;
+  cursor: pointer; /* Ensure the area is clickable */
 }/*# sourceMappingURL=settings.css.map */

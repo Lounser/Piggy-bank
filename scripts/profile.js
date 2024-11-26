@@ -1,4 +1,4 @@
-// DOM elements
+
 const piggyBanksContainer = document.getElementById('piggy-banks-container');
 const addPiggyBankForm = document.getElementById('add-piggy-bank');
 const piggyBankNameInput = addPiggyBankForm.querySelector('#piggy-bank-name');
@@ -25,9 +25,8 @@ const distributionChartCanvas = document.getElementById('distributionChart');
 const updateChartsButton = document.getElementById('update-charts');
 const loadingIndicator = updateChartsButton.querySelector('.loading-indicator');
 const updaterText = updateChartsButton.querySelector('.updater-text');
-const achievementImagesPath = '/my-piggy-bank/images/'; // Измените если нужно
+const achievementImagesPath = '/my-piggy-bank/images/';
 
-// Data
 let piggyBanks = [];
 let transactionsCharts = {};
 
@@ -35,11 +34,9 @@ const achievements = {
     'Золотая свинья': { goal: 10000, imagePath: 'golden-pig.png' },
     'Серебряная свинья': { goal: 5000, imagePath: 'iron-pig.png' },
     'Бронзовая свинья': { goal: 2500, imagePath: 'bronze-pig.png' },
-    // Добавьте другие достижения сюда
-    //  используйте объект, чтобы хранить путь к изображению в отдельном поле.
+    
 };
 
-// UUID generator
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
         const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -47,7 +44,6 @@ function generateUUID() {
     });
 }
 
-// Create piggy bank
 function createPiggyBank(name, goal, start, image, description, id, goalDate) {
     const goalNum = parseFloat(goal);
     const startNum = parseFloat(start);
@@ -56,15 +52,16 @@ function createPiggyBank(name, goal, start, image, description, id, goalDate) {
         alert('Некорректный ввод. Убедитесь, что все поля заполнены корректными значениями.');
         return;
     }
-
+    
     const newPiggyBank = {
+        isPinned: false,
         name,
         goal: goalNum,
         current: startNum,
-        image,
+        image: image || '/images/no-image.png',
         description,
         id: id || generateUUID(),
-        points: 0,
+        points: startNum,
         transactions: [],
         goalDate: goalDate ? new Date(goalDate) : null
     };
@@ -77,11 +74,30 @@ function createPiggyBank(name, goal, start, image, description, id, goalDate) {
     clearForm();
     savePiggyBanks();
 }
+function savePinnedPiggyBanks() {
+    localStorage.setItem('pinnedPiggyBanks', JSON.stringify(piggyBanks.filter(bank => bank.isPinned)));
+}
 
-// Render piggy banks
+function loadPinnedPiggyBanks() {
+    const pinnedBanks = localStorage.getItem('pinnedPiggyBanks');
+    if (pinnedBanks) {
+        try {
+            const parsedBanks = JSON.parse(pinnedBanks);
+            piggyBanks.forEach(bank => {
+                const pinnedBank = parsedBanks.find(pBank => pBank.id === bank.id);
+                if (pinnedBank) {
+                    bank.isPinned = true;
+                }
+            });
+        } catch (error) {
+            console.error('Ошибка при загрузке закрепленных копилок:', error);
+        }
+    }
+}
 function renderPiggyBanks(filteredBanks = piggyBanks) {
     piggyBanksContainer.innerHTML = '';
-    filteredBanks.forEach(piggyBank => {
+    const sortedBanks = [...filteredBanks].sort((a, b) => b.isPinned - a.isPinned);
+    sortedBanks.forEach(piggyBank => {
         const piggyBankEl = createPiggyBankElement(piggyBank);
         piggyBanksContainer.appendChild(piggyBankEl);
         attachPiggyBankListeners(piggyBankEl, piggyBank);
@@ -92,14 +108,13 @@ function renderPiggyBanks(filteredBanks = piggyBanks) {
     createDistributionChart(filteredBanks);
 }
 
-// Create piggy bank element
 function createPiggyBankElement(piggyBank) {
     const piggyBankEl = document.createElement('div');
     piggyBankEl.classList.add('piggy-bank');
     piggyBankEl.dataset.id = piggyBank.id;
     piggyBankEl.innerHTML = `
         <h3>${piggyBank.name}</h3>
-        ${piggyBank.image ? `<img class="piggy-bank-image" src="${piggyBank.image}" alt="${piggyBank.name}">` : ''}
+        <img class="piggy-bank-image" src="${piggyBank.image || '/images/no-image.png'}" alt="${piggyBank.name}">
         <div class="progress-bar">
             <div class="progress-bar-fill"></div>
             <div class="progress-text"></div>
@@ -120,18 +135,35 @@ function createPiggyBankElement(piggyBank) {
         </div>
         <div class="transactions-container">
             <h3>История транзакций:</h3>
-            <ul class="transactions-list"></ul>  <!-- Список транзакций -->
-            </div>
-            <canvas data-id="${piggyBank.id}" class="transactions-chart"></canvas>
+            <ul class="transactions-list"></ul>
+        </div>
+        <canvas data-id="${piggyBank.id}" class="transactions-chart"></canvas>
     `;
 
-    updateTransactionsList(piggyBank, piggyBankEl); // Обновляем список сразу после создания элемента
+    // Добавляем кнопку "Закрепить/Открепить"
+    const actionsContainer = piggyBankEl.querySelector('.actions-container');
+    const pinButton = document.createElement('button');
+    pinButton.classList.add('pin-button');
+    pinButton.dataset.pinned = piggyBank.isPinned; // Добавляем атрибут данных
+    pinButton.textContent = piggyBank.isPinned ? 'Открепить' : 'Закрепить';
+    actionsContainer.appendChild(pinButton);
+
+
+    updateTransactionsList(piggyBank, piggyBankEl);
     showGoalDate(piggyBank, piggyBankEl);
     updateProgressBar(piggyBank);
 
     return piggyBankEl;
 }
-
+function updatePiggyBankElement(piggyBank) {
+    const piggyBankEl = document.querySelector(`.piggy-bank[data-id="${piggyBank.id}"]`);
+    if (piggyBankEl) {
+        const pinButton = piggyBankEl.querySelector('.pin-button');
+        pinButton.dataset.pinned = piggyBank.isPinned;
+        pinButton.textContent = piggyBank.isPinned ? 'Открепить' : 'Закрепить';
+        renderPiggyBanks();
+    }
+}
 function showGoalDate(piggyBank, piggyBankEl) {
     const goalDateSpan = piggyBankEl.querySelector('.goal-date');
     if (piggyBank.goalDate) {
@@ -143,8 +175,6 @@ function showGoalDate(piggyBank, piggyBankEl) {
     }
 }
 
-
-// Add/subtract transaction listeners
 function addTransactionListeners(piggyBankEl, piggyBank) {
     const addButton = piggyBankEl.querySelector('.add-button');
     const addAmountInput = piggyBankEl.querySelector('.add-amount');
@@ -156,12 +186,11 @@ function addTransactionListeners(piggyBankEl, piggyBank) {
     subtractButton.addEventListener('click', () => handleTransaction(piggyBank, subtractAmountInput, currentBalanceSpan, 'subtract'));
 }
 
-// Handle transaction
 function handleTransaction(bank, amountInput, balanceSpan, type) {
     const amount = parseFloat(amountInput.value);
     if (!isNaN(amount) && amount > 0) {
         bank.current += (type === 'add' ? amount : -amount);
-        bank.points += (type === 'add' ? amount : -amount);
+        // bank.points += (type === 'add' ? amount : -amount); 
         bank.transactions.push({ amount, date: new Date(), type });
         amountInput.value = '';
         balanceSpan.textContent = bank.current;
@@ -176,7 +205,6 @@ function handleTransaction(bank, amountInput, balanceSpan, type) {
     }
 }
 
-// Update transactions list
 function updateTransactionsList(piggyBank, piggyBankEl) {
     const transactionsList = piggyBankEl ? piggyBankEl.querySelector('.transactions-list') : document.querySelector(`.piggy-bank[data-id="${piggyBank.id}"] .transactions-list`);
     if (transactionsList) {
@@ -195,7 +223,6 @@ function updateTransactionsList(piggyBank, piggyBankEl) {
     }
 }
 
-// Edit/delete listeners
 function addEditDeleteListeners(piggyBankEl, piggyBank) {
     const editButton = piggyBankEl.querySelector('.edit-button');
     const deleteButton = piggyBankEl.querySelector('.delete-button');
@@ -210,7 +237,6 @@ function addEditDeleteListeners(piggyBankEl, piggyBank) {
     });
 }
 
-// Update progress bar
 function updateProgressBar(piggyBank) {
     const piggyBankEl = document.querySelector(`.piggy-bank[data-id="${piggyBank.id}"]`);
     if (!piggyBankEl) return;
@@ -222,7 +248,6 @@ function updateProgressBar(piggyBank) {
     updateGoalClass(piggyBankEl, piggyBank);
 }
 
-// Update goal class
 function updateGoalClass(piggyBankEl, piggyBank) {
     piggyBankEl.classList.remove('over-goal', 'double-over-goal', 'triple-over-goal', 'quadruple-over-goal');
     if (piggyBank.current > piggyBank.goal) {
@@ -239,7 +264,6 @@ function updateGoalClass(piggyBankEl, piggyBank) {
     }
 }
 
-// Populate form
 function populateForm(piggyBank) {
     piggyBankNameInput.value = piggyBank.name;
     piggyBankGoalInput.value = piggyBank.goal;
@@ -247,27 +271,25 @@ function populateForm(piggyBank) {
     piggyBankDescriptionInput.value = piggyBank.description;
     piggyBankIdInput.value = piggyBank.id;
     piggyBankGoalDateInput.value = piggyBank.goalDate ? piggyBank.goalDate.toISOString().slice(0, 10) : '';
-    piggyBankImagePreview.src = piggyBank.image;
+    piggyBankImagePreview.src = piggyBank.image || '/images/no-image.png';
     piggyBankImagePreview.style.display = 'block';
 
     savePiggyBankBtn.textContent = 'Сохранить';
     cancelPiggyBankBtn.style.display = 'block';
 }
 
-// Clear form
 function clearForm() {
     piggyBankNameInput.value = '';
     piggyBankGoalInput.value = '';
     piggyBankStartInput.value = '';
     piggyBankDescriptionInput.value = '';
     piggyBankIdInput.value = '';
-    piggyBankImagePreview.src = '#';
+    piggyBankImagePreview.src = '/images/no-image.png';
     piggyBankImagePreview.style.display = 'none';
     savePiggyBankBtn.textContent = 'Создать';
     cancelPiggyBankBtn.style.display = 'none';
 }
 
-// Image change handler
 piggyBankImageInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -278,28 +300,35 @@ piggyBankImageInput.addEventListener('change', (event) => {
         };
         reader.readAsDataURL(file);
     } else {
-        piggyBankImagePreview.src = '#';
+        piggyBankImagePreview.src = '/images/no-image.png';
         piggyBankImagePreview.style.display = 'none';
     }
 });
 
-// Form validation
 function validateForm() {
     let isValid = true;
     const name = piggyBankNameInput.value.trim();
     const goal = parseFloat(piggyBankGoalInput.value);
     const start = parseFloat(piggyBankStartInput.value);
 
+    const nameErrorMessage = piggyBankNameInput.nextElementSibling;
+    const goalErrorMessage = piggyBankGoalInput.nextElementSibling;
+    const startErrorMessage = piggyBankStartInput.nextElementSibling;
+
+    nameErrorMessage.style.display = 'none';
+    goalErrorMessage.style.display = 'none';
+    startErrorMessage.style.display = 'none';
+
     if (!name) {
-        alert('Поле "Название копилки" обязательно для заполнения!');
+        nameErrorMessage.style.display = 'block';
         isValid = false;
     }
     if (isNaN(goal) || goal <= 0) {
-        alert('Поле "Цель" должно быть числом больше 0!');
+        goalErrorMessage.style.display = 'block';
         isValid = false;
     }
     if (isNaN(start) || start < 0) {
-        alert('Поле "Начальная сумма" должно быть числом больше или равно 0!');
+        startErrorMessage.style.display = 'block';
         isValid = false;
     }
 
@@ -349,20 +378,35 @@ if (localStorage.getItem('darkMode') === 'true') {
     document.querySelectorAll('.fa-sun, .fa-moon').forEach(icon => icon.classList.add('light'));
 }
 // Apply filters
-applyFiltersBtn.addEventListener('click', () => {
-    const nameFilter = nameFilterInput.value.toLowerCase();
-    const goalFilter = goalFilterSelect.value;
+document.getElementById('apply-filters').addEventListener('click', () => {
+    const nameFilter = document.getElementById('name-filter').value.toLowerCase();
+    const goalFilter = document.getElementById('goal-filter').value;
 
-    const filteredPiggyBanks = piggyBanks.filter(piggyBank => {
-        const nameMatch = nameFilter === '' || piggyBank.name.toLowerCase().includes(nameFilter);
-        const goalMatch = goalFilter === '' ||
-            (goalFilter === 'less' && piggyBank.current < piggyBank.goal) ||
-            (goalFilter === 'more' && piggyBank.current > piggyBank.goal);
-        return nameMatch && goalMatch;
+    // Сортируем массив piggyBanks, а не фильтруем
+    piggyBanks.sort((a, b) => {
+        // Сначала сортируем по имени (если фильтр задан)
+        if (nameFilter !== '') {
+            const nameA = a.name.toLowerCase();
+            const nameB = b.name.toLowerCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+        }
+
+        // Затем сортируем по цели (если фильтр задан)
+        if (goalFilter !== '') {
+            if (goalFilter === 'less') {
+                return a.current - b.current; // По возрастанию текущей суммы
+            } else if (goalFilter === 'more') {
+                return b.current - a.current; // По убыванию текущей суммы
+            }
+        }
+
+        // Если фильтры не заданы, оставляем порядок без изменений
+        return 0;
     });
-    renderPiggyBanks(filteredPiggyBanks);
-});
 
+    renderPiggyBanks(piggyBanks); // Перерисовываем с новым порядком
+});
 // Update statistics
 function updateStatistics(piggyBanksToDisplay) {
     if (piggyBanksToDisplay.length === 0) {
@@ -401,61 +445,238 @@ function updateStatistics(piggyBanksToDisplay) {
 
 // Update leaderboard
 function updateLeaderboard() {
-    const sortedPiggyBanks = piggyBanks.sort((a, b) => b.points - a.points);
+    const sortedPiggyBanks = [...piggyBanks].sort((a, b) => b.points - a.points);
     leaderboardList.innerHTML = '';
-
-    // Загрузка настроек пользователя из localStorage с обработкой ошибок
-    let userName = '';
-    let userImage = 'images/user-icons/default.png'; // Изображение по умолчанию
-
+  
+    // Загрузка настроек пользователя из localStorage (с обработкой ошибок)
+    let userName = 'Неизвестный пользователь';
+    let userImage = 'images/user-icons/default.png';
+  
     try {
-        const settings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
-        userName = settings.username || 'Неизвестный пользователь';
-        userImage = settings.userImage || userImage; // Используем default, если userImage не задан
+      const settings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
+      userName = settings.username || 'Неизвестный пользователь';
+      userImage = settings.userImage || userImage;
+      if (!userImage || !userImage.trim()) {
+        userImage = 'images/user-icons/default.png';
+      }
     } catch (error) {
-        console.error('Ошибка при загрузке настроек:', error);
-        userName = 'Неизвестный пользователь';
+      console.error('Ошибка при загрузке настроек:', error);
+    }
+  
+    sortedPiggyBanks.forEach((piggyBank, index) => {
+      // Важная проверка на корректность данных piggyBank
+      if (!piggyBank || !piggyBank.id || !piggyBank.name || isNaN(piggyBank.current)) {
+        console.error("Ошибка: Некорректные данные для копилки:", piggyBank);
+        return;
+      }
+  
+      const listItem = document.createElement('li');
+      listItem.dataset.id = piggyBank.id;
+  
+      // Обновляем points на основе текущего баланса, включая начальный
+      piggyBank.points = piggyBank.current;
+  
+  
+      const achievementsHTML = Object.entries(achievements)
+        .map(([achievementName, achievementData]) => {
+          if (!achievements[achievementName] || isNaN(achievementData.goal)) {
+            console.error("Ошибка: Неверные данные для достижения:", achievementName);
+            return '';
+          }
+          const progress = Math.min(100, (piggyBank.points / achievementData.goal) * 100);
+          const imagePath = `${achievementImagesPath}${achievementData.imagePath}`;
+  
+          return `
+            <div class="achievement" data-achievement="${achievementName}" data-goal="${achievementData.goal}">
+              ${progress >= 100 ? `<img src="${imagePath}" alt="${achievementName}">` : ''}
+            </div>
+          `;
+        })
+        .join('');
+  
+  
+      listItem.innerHTML = `
+        <span>${index + 1}. </span>
+        <div class="user-info">
+          <img src="${userImage}" alt="Иконка пользователя" class="leaderboard-icon">
+          <span class="username">${userName}</span>
+        </div>
+        <span>Копилка: ${piggyBank.name}</span> -
+        <span>${piggyBank.current.toFixed(2)}₽</span>
+        <div class="achievements">${achievementsHTML}</div>
+      `;
+  
+      // Обработка кликов по достижениям, вызывается после создания элементов
+      const userImageEl = listItem.querySelector('.leaderboard-icon');
+      if (userImageEl) {
+        userImageEl.addEventListener('click', () => openImageModal(userImage));
+      }
+  
+      leaderboardList.appendChild(listItem);
+    });
+  
+    addAchievementListeners(); //Вызываем addAchievementListeners после создания элементов
+  }
+  function openAchievementModal(piggyBank, achievementName, achievementGoal, achievementImagePath) {
+    // Проверки на корректность данных
+    if (!piggyBank || !achievementName || !achievementGoal || !achievementImagePath) {
+        console.error("Ошибка: Не все параметры переданы в openAchievementModal");
+        return;
+    }
+    if (isNaN(achievementGoal) || achievementGoal <= 0) {
+        console.error("Ошибка: Некорректное значение achievementGoal:", achievementGoal);
+        return;
     }
 
-    sortedPiggyBanks.forEach((piggyBank, index) => {
-        const listItem = document.createElement('li');
-        const achievementsHTML = Object.entries(achievements)
-            .map(([achievementName, achievementData]) => {
-                const progress = Math.min(100, (piggyBank.points / achievementData.goal) * 100);
-                const imagePath = `${achievementImagesPath}${achievementData.imagePath}`;
-                return `
-                    <div class="achievement" data-achievement="${achievementName}" data-goal="${achievementData.goal}">
-                        ${progress === 100 ? `<img src="${imagePath}" alt="${achievementName}">` : ''}
-                    </div>
-                `;
-            })
-            .join('');
+    const currentPoints = piggyBank.points;
+    const progress = `${currentPoints}/${achievementGoal}`;
+    const imagePath = `${achievementImagesPath}${achievementImagePath}`;
 
-        listItem.innerHTML = `
-            <span>${index + 1}. </span>
-            <div class="user-info">
-                <img src="${userImage}" alt="Иконка пользователя" class="leaderboard-icon">
-                <span class="username">${userName}</span>
-            </div>
-            <span>Копилка: ${piggyBank.name}</span> -
-            <span>${piggyBank.current.toFixed(2)}₽</span>
-            <div class="achievements">${achievementsHTML}</div>
-        `;
-        leaderboardList.appendChild(listItem);
+    const modal = document.createElement('div');
+    modal.classList.add('achievement-modal');
+    modal.innerHTML = `
+        <div class="achievement-modal-content">
+            <img src="${imagePath}" alt="${achievementName}" class="achievement-modal-image">
+            <p>Достижение: ${achievementName} </p>
+            <p>Копилка: ${piggyBank.name}</p>
+            <p>Цель: накопить ${achievementGoal}₽</p>
+            <p>Прогресс: ${progress}₽</p>
+            <button class="achievement-modal-close">Закрыть</button>
+        </div>
+    `;
+
+    modal.classList.add('zoom-in');
+    document.body.appendChild(modal);
+
+    modal.querySelector('.achievement-modal-close').addEventListener('click', () => closeModal(modal));
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModal(modal);
+        }
     });
-    addAchievementListeners();
 }
 
+function closeModal(modal) {
+    modal.classList.remove('zoom-in');
+    modal.classList.add('fade-out');
+    setTimeout(() => modal.remove(), 300);
+}
+
+function closeModal(modal){
+    modal.classList.remove('fade-in');
+    modal.classList.add('fade-out');
+    setTimeout(() => modal.remove(), 300); // Таймаут для анимации
+}
+
+function openImageModal(imageSrc) {
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+
+    const img = document.createElement('img');
+    img.src = imageSrc;
+    img.alt = 'Leaderboard Image';
+    img.classList.add('modal-image');
+
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Закрыть';
+    closeButton.classList.add('modal-close');
+    closeButton.addEventListener('click', () => modal.remove());
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.remove();
+        }
+    });
+
+    img.addEventListener('click', () => {
+        if (img.style.transform === 'scale(1.5)') {
+            img.style.transform = 'scale(1)';
+        } else {
+            img.style.transform = 'scale(1.5)';
+        }
+    });
+
+    modal.appendChild(img);
+    modal.appendChild(closeButton);
+    document.body.appendChild(modal);
+}
+
+function openLeaderboardImageModal(event) {
+    const imageSrc = event.target.src;
+    const modal = createModal(imageSrc);
+    document.body.appendChild(modal);
+}
+
+function createModal(imageSrc, achievementName, goal, current) {
+    const modal = document.createElement('div');
+    modal.classList.add('achievement-modal');
+
+    const modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content-wrapper');
+
+    const img = document.createElement('img');
+    img.src = imageSrc;
+    img.alt = 'Leaderboard Image';
+    img.classList.add('modal-image');
+
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Закрыть';
+    closeButton.classList.add('modal-close');
+    closeButton.addEventListener('click', () => modal.remove());
+
+    const goalElement = document.createElement('p');
+    goalElement.textContent = `Цель: ${goal}₽`;
+
+    const currentElement = document.createElement('p');
+    currentElement.textContent = `Прогресс: ${current}₽`;
+
+    const progressElement = document.createElement('progress');
+    progressElement.max = goal;
+    progressElement.value = current;
+
+    modalContent.appendChild(img);
+    modalContent.appendChild(goalElement);
+    modalContent.appendChild(currentElement);
+    modalContent.appendChild(progressElement);
+    modalContent.appendChild(closeButton);
+    modal.appendChild(modalContent);
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.remove();
+        }
+    });
+
+    return modal;
+}
 
 function addAchievementListeners() {
     leaderboardList.querySelectorAll('.achievement').forEach(achievement => {
+        const piggyBankId = achievement.closest('li').dataset.id;
+        if (!piggyBankId) {
+            console.error("Ошибка: Не найден data-id у элемента achievement. Проверьте структуру HTML.");
+            return;
+        }
+
+        const piggyBank = piggyBanks.find(bank => bank.id === piggyBankId);
+        if (!piggyBank) {
+            console.error("Ошибка: Копилка не найдена по ID:", piggyBankId);
+            return;
+        }
+
         achievement.addEventListener('click', () => {
             const achievementName = achievement.dataset.achievement;
             const achievementGoal = parseFloat(achievement.dataset.goal);
-            alert(`Награда: ${achievementName}\nЦель: ${achievementGoal}`);
+            //Проверка на корректность achievementGoal
+            if(isNaN(achievementGoal)){
+                console.error("Ошибка: achievementGoal не является числом:", achievement.dataset.goal);
+                return;
+            }
+            const achievementImage = achievements[achievementName].imagePath;
+            openAchievementModal(piggyBank, achievementName, achievementGoal, achievementImage);
         });
     });
 }
+
 
 // Load piggy banks from localStorage
 function loadPiggyBanks() {
@@ -671,6 +892,14 @@ function attachPiggyBankListeners(piggyBankEl, piggyBank) {
     addTransactionListeners(piggyBankEl, piggyBank);
     addEditDeleteListeners(piggyBankEl, piggyBank);
     piggyBankEl.dataset.hasEventListeners = true;
+    const pinButton = piggyBankEl.querySelector('.pin-button');
+    pinButton.addEventListener('click', () => {
+        piggyBank.isPinned = !piggyBank.isPinned;
+        pinButton.dataset.pinned = piggyBank.isPinned;
+        pinButton.textContent = piggyBank.isPinned ? 'Открепить' : 'Закрепить';
+        updatePiggyBankElement(piggyBank); // Обновляем отображение
+        savePiggyBanks();
+    });
   }
 }
 

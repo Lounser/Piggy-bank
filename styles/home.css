@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* styles/home.css */
 @import url("https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap");
 body {
@@ -11,6 +12,7 @@ body {
   margin: 0; /* Remove default margin */
   padding: 0; /* Remove default padding */
   overflow-x: hidden;
+  font-size: 0.9rem;
 }
 
 /* Navigation */
@@ -95,9 +97,13 @@ section {
   font-size: 1.3rem;
 }
 
+section p, section li {
+  font-size: 1rem;
+}
+
 .section-block a.action-button {
   display: inline-block;
-  gap: 1.25rem;
+  gap: 1.5rem;
   margin-top: 30px;
 }
 
@@ -119,13 +125,33 @@ section {
 }
 
 .action-button {
+  font-size: 0.8em;
   display: inline-block;
+  display: flex;
   padding: 15px 30px;
   background-color: #f3ad21;
   color: white;
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s ease;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  gap: 1.25rem;
+}
+.action-button img {
+  width: 2rem;
+  height: 2rem;
+  vertical-align: middle;
+  display: inline-block; /* Необходимо для вертикального выравнивания */
+  margin-right: 10px;
+}
+@media screen and (max-width: 500px) {
+  .action-button img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 }
 
 .action-button:hover {
@@ -204,4 +230,26 @@ body.dark #navigation a:hover {
 
 body.dark footer {
   background-color: #1a1a1a;
+}
+
+.rating {
+  display: inline-block;
+}
+
+.star {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-image: url("/my-piggy-bank/Images/star-svgrepo-com.svg"); /* Замените на путь к вашей картинке звезды */
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.star.full {
+  background-position: center center;
+}
+
+.star.half {
+  background-position: left center; /* Или right, смотря как у вас сделана картинка половинки */
+  background-size: 50% contain;
 }/*# sourceMappingURL=home.css.map */
