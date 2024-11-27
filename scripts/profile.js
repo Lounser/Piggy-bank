@@ -284,7 +284,8 @@ function clearForm() {
     piggyBankStartInput.value = '';
     piggyBankDescriptionInput.value = '';
     piggyBankIdInput.value = '';
-    piggyBankImagePreview.src = '/images/no-image.png';
+    piggyBankImagePreview.src = '';
+    piggyBankImagePreview.textContent = 'Вы не выбрали изображение';
     piggyBankImagePreview.style.display = 'none';
     savePiggyBankBtn.textContent = 'Создать';
     cancelPiggyBankBtn.style.display = 'none';
@@ -363,7 +364,9 @@ themeSwitchCheckbox.addEventListener('change', (event) => {
     document.getElementById('piggy-banks-container').classList.toggle('dark', isDark);
     document.getElementById('welcome-message').classList.toggle('dark', isDark);
     document.querySelectorAll('.fa-sun, .fa-moon').forEach(icon => icon.classList.toggle('light', !isDark));
+    document.querySelector('.stats-container').classList.toggle('dark', isDark);
     localStorage.setItem('darkMode', isDark);
+
 });
 
 if (localStorage.getItem('darkMode') === 'true') {
@@ -376,6 +379,7 @@ if (localStorage.getItem('darkMode') === 'true') {
     document.getElementById('piggy-banks-container').classList.add('dark');
     document.getElementById('welcome-message').classList.add('dark');
     document.querySelectorAll('.fa-sun, .fa-moon').forEach(icon => icon.classList.add('light'));
+    document.querySelector('.stats-container').classList.add('dark');
 }
 // Apply filters
 document.getElementById('apply-filters').addEventListener('click', () => {
@@ -443,8 +447,8 @@ function updateStatistics(piggyBanksToDisplay) {
     avgDailyTransactionsEl.textContent = isNaN(avgDaily) ? '0' : avgDaily.toFixed(2);
 }
 
-// Update leaderboard
-function updateLeaderboard() {
+  // Обновление лидерборда
+  function updateLeaderboard() {
     const sortedPiggyBanks = [...piggyBanks].sort((a, b) => b.points - a.points);
     leaderboardList.innerHTML = '';
   
@@ -517,50 +521,11 @@ function updateLeaderboard() {
   
     addAchievementListeners(); //Вызываем addAchievementListeners после создания элементов
   }
-  function openAchievementModal(piggyBank, achievementName, achievementGoal, achievementImagePath) {
-    // Проверки на корректность данных
-    if (!piggyBank || !achievementName || !achievementGoal || !achievementImagePath) {
-        console.error("Ошибка: Не все параметры переданы в openAchievementModal");
-        return;
-    }
-    if (isNaN(achievementGoal) || achievementGoal <= 0) {
-        console.error("Ошибка: Некорректное значение achievementGoal:", achievementGoal);
-        return;
-    }
-
-    const currentPoints = piggyBank.points;
-    const progress = `${currentPoints}/${achievementGoal}`;
-    const imagePath = `${achievementImagesPath}${achievementImagePath}`;
-
-    const modal = document.createElement('div');
-    modal.classList.add('achievement-modal');
-    modal.innerHTML = `
-        <div class="achievement-modal-content">
-            <img src="${imagePath}" alt="${achievementName}" class="achievement-modal-image">
-            <p>Достижение: ${achievementName} </p>
-            <p>Копилка: ${piggyBank.name}</p>
-            <p>Цель: накопить ${achievementGoal}₽</p>
-            <p>Прогресс: ${progress}₽</p>
-            <button class="achievement-modal-close">Закрыть</button>
-        </div>
-    `;
-
-    modal.classList.add('zoom-in');
-    document.body.appendChild(modal);
-
-    modal.querySelector('.achievement-modal-close').addEventListener('click', () => closeModal(modal));
-    modal.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            closeModal(modal);
-        }
-    });
-}
-
-function closeModal(modal) {
-    modal.classList.remove('zoom-in');
-    modal.classList.add('fade-out');
-    setTimeout(() => modal.remove(), 300);
-}
+  
+  //Обновляем лидерборд каждый раз, когда изменяется копилка
+  piggyBanks.forEach(piggyBank => {
+    piggyBank.addEventListener('update', updateLeaderboard);
+  });
 
 function closeModal(modal){
     modal.classList.remove('fade-in');
@@ -678,7 +643,6 @@ function addAchievementListeners() {
 }
 
 
-// Load piggy banks from localStorage
 function loadPiggyBanks() {
     const storedPiggyBanks = localStorage.getItem('piggyBanks');
     if (storedPiggyBanks) {
@@ -878,11 +842,9 @@ function createTransactionsChart(piggyBank) {
 }
 
 // Color generator
+// Generate an array of unique colors
 function generateColors(numColors) {
-    const colors = [];
-    for (let i = 0; i < numColors; i++) {
-        colors.push(`hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`);
-    }
+    const colors = Array.from({ length: numColors }, (_, i) => `hsl(${i * 360 / numColors}, 70%, 50%)`);
     return colors;
 }
 

@@ -455,9 +455,14 @@ h1 {
 #statistics span {
   font-weight: bold;
 }
-.stats-container{
-  p{
-    color: lighten($text-color, $amount: 20);
+.stats-container {
+  p {
+    color: #333;
+    transition: color 0.3s ease;
+  }
+
+  &.dark p {
+    color: #fff;
   }
 }
 #leaderboard {
@@ -766,7 +771,20 @@ body.light {
 body.dark {
   animation: dark-theme 0.3s ease-in-out forwards;
 }
+.achievement-modal.dark {
+  background-color: #303030;
+  color: #fff;
+}
 
+.achievement-modal-content.dark {
+  background-color: #444;
+  color: #fff;
+}
+
+.achievement-modal-close.dark {
+  background-color: #ff0000;
+  color: #fff;
+}
 @keyframes light-theme {
   0% {
     background-color: #212121;
@@ -1062,3 +1080,9 @@ body.dark #navigation a {
   .transactions-container{
     max-height: 250px;
   }
+.rickroll a{
+  color: #fff;
+  background: #f3ad21;
+  padding: 7px 20px;
+  border-radius: 5px;
+}
