@@ -25,7 +25,7 @@ const distributionChartCanvas = document.getElementById('distributionChart');
 const updateChartsButton = document.getElementById('update-charts');
 const loadingIndicator = updateChartsButton.querySelector('.loading-indicator');
 const updaterText = updateChartsButton.querySelector('.updater-text');
-const achievementImagesPath = '../images/';
+const achievementImagesPath = './images/';
 
 let piggyBanks = [];
 let transactionsCharts = {};
