@@ -454,14 +454,14 @@ function updateLeaderboard() {
   
     // Загрузка настроек пользователя из localStorage (с обработкой ошибок)
     let userName = 'Неизвестный пользователь';
-    let userImage = 'images/user-icons/default.png';
+    let userImage = '../default.png';
   
     try {
       const settings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
       userName = settings.username || 'Неизвестный пользователь';
       userImage = settings.userImage || userImage;
       if (!userImage || !userImage.trim()) {
-        userImage = 'images/user-icons/default.png';
+        userImage = '../default.png';
       }
     } catch (error) {
       console.error('Ошибка при загрузке настроек:', error);
