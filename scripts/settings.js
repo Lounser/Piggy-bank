@@ -1,67 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Получение элементов DOM с проверкой на null
-    const elements = [
-        'disable-profile-charts', 'disable-transaction-charts', 'user-image-upload', 'user-image-preview',
-        'save-settings', 'username', 'theme-switch-checkbox'
-    ].map(id => document.getElementById(id));
+    const elements = {
+        disableProfileCharts: document.getElementById('disable-profile-charts'),
+        disableTransactionCharts: document.getElementById('disable-transaction-charts'),
+        userImageUpload: document.getElementById('user-image-upload'),
+        userImagePreview: document.getElementById('user-image-preview'),
+        saveSettingsButton: document.getElementById('save-settings'),
+        usernameInput: document.getElementById('username'),
+        themeSwitchCheckbox: document.getElementById('theme-switch-checkbox'),
+        removeUserImageButton: document.getElementById('remove-user-image'),
+    };
 
-    if (elements.some(el => el === null)) {
+    if (Object.values(elements).some(el => el === null)) {
         console.error("Один или несколько элементов настроек не найдены!");
         return;
     }
 
-    const [disableProfileChartsCheckbox, disableTransactionChartsCheckbox, userImageUpload, userImagePreview,
-           saveSettingsButton, usernameInput, themeSwitchCheckbox] = elements;
+    const defaultUserImage = 'images/user-icons/default.png';
 
+    function loadSettings() {
+        const savedSettings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
+        elements.disableProfileCharts.checked = savedSettings.disableProfileCharts || false;
+        elements.disableTransactionCharts.checked = savedSettings.disableTransactionCharts || false;
+        elements.usernameInput.value = savedSettings.username || '';
+        elements.themeSwitchCheckbox.checked = savedSettings.darkMode || false;
+        elements.userImagePreview.src = savedSettings.userImage || defaultUserImage;
+        elements.userImagePreview.style.display = savedSettings.userImage ? 'block' : 'none';
+    }
 
-    // Загрузка настроек с обработкой ошибок и использованием ??
-    const savedSettings = JSON.parse(localStorage.getItem('piggyBankSettings')) ?? {};
-
-    // Применение сохраненных настроек или значений по умолчанию
-    disableProfileChartsCheckbox.checked = savedSettings.disableProfileCharts ?? false;
-    disableTransactionChartsCheckbox.checked = savedSettings.disableTransactionCharts ?? false;
-    usernameInput.value = savedSettings.username ?? '';
-    themeSwitchCheckbox.checked = savedSettings.darkMode ?? false;
-    userImagePreview.src = savedSettings.userImage ?? 'images/user-icons/default.png';
-    if (savedSettings.userImage) userImagePreview.style.display = 'block';
-
-
-    // Обработчик загрузки изображения с обработкой ошибок и восстановлением изображения по умолчанию
-    userImageUpload.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                userImagePreview.src = e.target.result;
-                userImagePreview.style.display = 'block';
-            };
-            reader.onerror = (error) => {
-                console.error("Ошибка при чтении файла:", error);
-                alert('Ошибка при загрузке изображения.');
-                userImagePreview.src = 'images/user-icons/default.png';
-            };
-            reader.readAsDataURL(file);
-        } else {
-            userImagePreview.src = 'images/user-icons/default.png';
-            userImagePreview.style.display = 'block';
-        }
-    });
-
-
-    //Обработчик сохранения настроек с валидацией
-    saveSettingsButton.addEventListener('click', () => {
-        const username = usernameInput.value.trim();
+    function saveSettings() {
+        const username = elements.usernameInput.value.trim();
         if (!username) {
             alert('Поле "Имя пользователя" не может быть пустым.');
             return;
         }
 
         const settings = {
-            disableProfileCharts: disableProfileChartsCheckbox.checked,
-            disableTransactionCharts: disableTransactionChartsCheckbox.checked,
-            userImage: userImagePreview.src,
+            disableProfileCharts: elements.disableProfileCharts.checked,
+            disableTransactionCharts: elements.disableTransactionCharts.checked,
+            userImage: elements.userImagePreview.src,
             username: username,
-            darkMode: themeSwitchCheckbox.checked,
+            darkMode: elements.themeSwitchCheckbox.checked,
         };
 
         try {
@@ -72,35 +50,68 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Ошибка при сохранении настроек в localStorage:", error);
             alert('Ошибка при сохранении настроек. Проверьте квоту localStorage или наличие ошибок в консоли.');
         }
+    }
+
+    loadSettings();
+
+    elements.userImageUpload.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                elements.userImagePreview.src = e.target.result;
+                elements.userImagePreview.style.display = 'block';
+            };
+            reader.onerror = (error) => {
+                console.error("Ошибка при чтении файла:", error);
+                alert('Ошибка при загрузке изображения.');
+                elements.userImagePreview.src = defaultUserImage;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            elements.userImagePreview.src = defaultUserImage;
+            elements.userImagePreview.style.display = 'block';
+        }
     });
-});
-const themeSwitchCheckbox = document.getElementById('theme-switch-checkbox');
-const body = document.body;
-const header = document.querySelector('header');
 
-// Загрузка настроек темной темы из локального хранилища при загрузке страницы
-const darkMode = localStorage.getItem('darkMode') === 'true';
-if (darkMode) {
-  themeSwitchCheckbox.checked = true;
-  body.classList.add('dark');
-  header.classList.add('dark');
-}
+    elements.saveSettingsButton.addEventListener('click', saveSettings);
 
-themeSwitchCheckbox.addEventListener('change', function() {
-  if (this.checked) {
-    body.classList.add('dark');
-    header.classList.add('dark');
-  } else {
-    body.classList.remove('dark');
-    header.classList.remove('dark');
-  }
-  localStorage.setItem('darkMode', this.checked);
-});
-const faqQuestions = document.querySelectorAll('.faq-question');
+    elements.removeUserImageButton.addEventListener('click', () => {
+        elements.userImagePreview.src = defaultUserImage;
+        elements.userImagePreview.style.display = 'block';
+        const savedSettings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
+        delete savedSettings.userImage;
+        localStorage.setItem('piggyBankSettings', JSON.stringify(savedSettings));
+    });
 
-faqQuestions.forEach(question => {
-  question.addEventListener('click', () => {
-    const answer = question.nextElementSibling;
-    answer.classList.toggle('show');
-  });
+
+    const themeSwitchCheckbox = elements.themeSwitchCheckbox;
+    const body = document.body;
+    const header = document.querySelector('header');
+
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    if (darkMode) {
+        themeSwitchCheckbox.checked = true;
+        body.classList.add('dark');
+        header.classList.add('dark');
+    }
+
+    themeSwitchCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            body.classList.add('dark');
+            header.classList.add('dark');
+        } else {
+            body.classList.remove('dark');
+            header.classList.remove('dark');
+        }
+        localStorage.setItem('darkMode', this.checked);
+    });
+
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+            const answer = question.nextElementSibling;
+            answer.classList.toggle('show');
+        });
+    });
 });
