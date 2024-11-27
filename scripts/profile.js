@@ -25,7 +25,7 @@ const distributionChartCanvas = document.getElementById('distributionChart');
 const updateChartsButton = document.getElementById('update-charts');
 const loadingIndicator = updateChartsButton.querySelector('.loading-indicator');
 const updaterText = updateChartsButton.querySelector('.updater-text');
-const achievementImagesPath = '/my-piggy-bank/images/';
+const achievementImagesPath = 'https://github.com/Lounser/piggy-bank/tree/63d70d9b13898b363ceb090689fab0ad92c843c6/Images';
 
 let piggyBanks = [];
 let transactionsCharts = {};
