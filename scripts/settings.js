@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const defaultUserImage = '../default.png';
+    const defaultUserImage = '../user-icons/default.png';
 
     function loadSettings() {
         const savedSettings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
