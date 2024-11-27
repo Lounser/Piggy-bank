@@ -1,0 +1,255 @@
+@charset "UTF-8";
+/* styles/home.css */
+@import url("https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap");
+body {
+  font-family: "Rubik Mono One", monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f4f4f4;
+  color: #333;
+  min-height: 100vh; /* Ensure body takes full viewport height */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  overflow-x: hidden;
+  font-size: 0.9rem;
+}
+
+/* Navigation */
+#navigation {
+  padding: 40px 20px; /* Reduced padding */
+  display: flex;
+  width: 100%; /* Make navigation full width */
+  box-sizing: border-box; /* Include padding in element width */
+}
+
+#navigation ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+#navigation li {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+  text-align: center; /* Center text within list items */
+}
+
+#navigation a {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s ease;
+  display: block; /* Make links take full list item width */
+}
+
+#navigation a:hover {
+  color: #FFC107;
+}
+
+.theme-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.theme-switch input[type=checkbox] {
+  display: none;
+}
+
+main {
+  flex: 1 0 auto;
+  gap: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.theme-switch label {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.theme-switch input[type=checkbox]:checked + label {
+  background-color: #f3ad21;
+}
+
+/* Sections */
+section {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff; /* added background */
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 50px;
+  line-height: 30px;
+  font-size: 1.3rem;
+}
+
+section p, section li {
+  font-size: 1rem;
+}
+
+.section-block a.action-button {
+  display: inline-block;
+  gap: 1.5rem;
+  margin-top: 30px;
+}
+
+/* Hero Section (Adjust as needed) */
+.hero {
+  text-align: center;
+  padding: 40px 0; /* Added padding to top and bottom */
+  margin-bottom: 20px;
+}
+
+.hero h2 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.action-button {
+  font-size: 0.8em;
+  display: inline-block;
+  display: flex;
+  padding: 15px 30px;
+  background-color: #f3ad21;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  gap: 1.25rem;
+}
+.action-button img {
+  width: 2rem;
+  height: 2rem;
+  vertical-align: middle;
+  display: inline-block; /* Необходимо для вертикального выравнивания */
+  margin-right: 10px;
+}
+@media screen and (max-width: 500px) {
+  .action-button img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.action-button:hover {
+  background-color: #eea30d;
+}
+
+/* Feature/Benefit Lists (Adjust as needed) */
+.feature-list, .benefit-list {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.feature-list li, .benefit-list li {
+  margin-bottom: 10px;
+}
+
+/* Testimonials (Adjust as needed) */
+.testimonials blockquote {
+  border-left: 5px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.testimonials cite {
+  display: block;
+  text-align: right;
+  font-style: normal;
+  margin-top: 10px;
+}
+
+/* Footer */
+footer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.875rem;
+  margin-top: max(40px, env(safe-area-inset-top));
+  bottom: 0;
+  left: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  background-color: #212121;
+  color: #fff;
+  padding: 50px 0px;
+  text-align: center;
+  border-top: 1px solid #333;
+}
+
+/* Dark Mode Styles */
+body.dark {
+  background-color: #212121;
+  color: #fff;
+}
+
+body.dark section {
+  background-color: #303030;
+  color: #fff;
+}
+
+body.dark .action-button {
+  background-color: #eea30d;
+}
+
+body.dark .action-button:hover {
+  background-color: #f3ad21;
+}
+
+body.dark #navigation a {
+  color: #fff;
+}
+
+body.dark #navigation a:hover {
+  color: #FFC107;
+}
+
+body.dark footer {
+  background-color: #1a1a1a;
+}
+
+.rating {
+  display: inline-block;
+}
+
+.star {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-image: url("/my-piggy-bank/Images/star-svgrepo-com.svg"); /* Замените на путь к вашей картинке звезды */
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.star.full {
+  background-position: center center;
+}
+
+.star.half {
+  background-position: left center; /* Или right, смотря как у вас сделана картинка половинки */
+  background-size: 50% contain;
+}/*# sourceMappingURL=home.css.map */

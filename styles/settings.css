@@ -1,0 +1,320 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap");
+:root {
+  --primary-color: #f3ad21; /* Определяем основной цвет для удобного изменения */
+  --background-color: #f4f4f4;
+  --text-color: #333;
+}
+
+body {
+  font-family: "Rubik Mono One", monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-size: 0.9rem;
+}
+
+/* Стили навигации */
+#navigation {
+  padding: 40px 20px;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#navigation ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+#navigation li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+  text-align: center;
+}
+
+#navigation a {
+  text-decoration: none;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+  display: block;
+}
+
+#navigation a:hover {
+  color: var(--primary-color);
+}
+
+/* Стили переключателя тем */
+.theme-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.theme-switch input[type=checkbox] {
+  display: none;
+}
+
+.theme-switch label {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.theme-switch input[type=checkbox]:checked + label {
+  background-color: var(--primary-color);
+}
+
+main {
+  flex: 1 0 auto;
+  gap: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+/* Стили секций */
+section {
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  line-height: 30px;
+  font-size: 1.3rem;
+}
+
+.section-block a.action-button {
+  display: inline-block;
+  gap: 1.25rem;
+  margin-top: 30px;
+}
+
+/* Стили секции "Hero" */
+.hero {
+  text-align: center;
+  padding: 40px 0;
+  margin-bottom: 20px;
+}
+
+.hero h2 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+/* Стили кнопок */
+button {
+  display: inline-block;
+  padding: 7px 30px;
+  background-color: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+#save-settings:hover {
+  background-color: #eea30d;
+}
+
+/* Стили FAQ */
+#faq {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 50px;
+  line-height: 30px;
+  font-size: clamp(0.8rem, 1.04vw, 1.04rem);
+}
+
+.faq-answer {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.faq-answer.show {
+  display: block;
+  opacity: 1;
+}
+
+/* Стили темной темы */
+body.dark {
+  background-color: #212121;
+  color: #fff;
+  --background-color: #212121;
+  --text-color: #fff;
+}
+
+body.dark section {
+  background-color: #303030;
+}
+
+body.dark .action-button {
+  background-color: #eea30d;
+}
+
+body.dark .action-button:hover {
+  background-color: var(--primary-color);
+}
+
+/* Стили футера */
+footer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.875rem;
+  margin-top: max(40px, env(safe-area-inset-top));
+  bottom: 0;
+  left: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  background-color: #212121;
+  color: #fff;
+  padding: 50px 0px;
+  text-align: center;
+  border-top: 1px solid #333;
+}
+
+/* Адаптивные стили */
+@media screen and (max-width: 600px) {
+  body {
+    overflow-x: hidden;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+  }
+  section {
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 0.75em;
+    padding: 15px;
+  }
+  .hero h2 {
+    font-size: 1.25em;
+  }
+  .hero p {
+    font-size: 0.875em;
+  }
+  #save-settings {
+    padding: 10px 15px;
+    font-size: 0.875em;
+  }
+  footer {
+    font-size: 0.75em;
+  }
+}
+.faq-answer {
+  display: none; /* Скрываем по умолчанию */
+  word-break: break-word; /* Разрыв слов при необходимости */
+  overflow-wrap: break-word; /* Дополнительное свойство для надежности */
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  width: calc(100% - 20px); /* Ширина, с учетом отступов */
+  overflow-y: auto;
+}
+
+.faq-answer p {
+  max-width: 90%; /* Ограничение ширины текста */
+  margin: 0 auto; /* Центрирование текста по горизонтали */
+  word-wrap: break-word; /* Разрыв слов при необходимости */
+}
+
+.faq-answer.show {
+  display: block; /* Показываем, если есть класс 'show' */
+}
+
+.file-upload {
+  position: relative; /* Necessary for absolute positioning of the input */
+  display: inline-block;
+}
+
+.file-upload-label {
+  display: inline-block;
+  padding: 5px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.875em;
+}
+
+.file-upload input[type=file] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0; /* Hide the default input */
+  width: 100%;
+  height: 100%;
+  cursor: pointer; /* Ensure the area is clickable */
+}
+
+/* Стили для модального окна */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Убедитесь, что модальное окно находится поверх других элементов */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Тень для модального окна */
+  text-align: center;
+}
+
+.modal-image {
+  max-width: 100%;
+  max-height: 80vh; /* Максимальная высота изображения */
+  display: block; /* Убираем отступы по умолчанию */
+  margin: 0 auto; /* Центрируем изображение */
+}
+
+.modal-close {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Зеленый цвет */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}/*# sourceMappingURL=settings.css.map */
