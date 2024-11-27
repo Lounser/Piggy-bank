@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Настройки сохранены!');
         } catch (error) {
             console.error("Ошибка при сохранении настроек в localStorage:", error);
-            alert('Ошибка при сохранении настроек. Проверьте квоту localStorage или наличие ошибок в консоли.');
+            alert('Ошибка при сохранении настроек. Проверьте наличие ошибок в консоли.');
         }
     }
 
