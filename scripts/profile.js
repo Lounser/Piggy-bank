@@ -25,7 +25,7 @@ const distributionChartCanvas = document.getElementById('distributionChart');
 const updateChartsButton = document.getElementById('update-charts');
 const loadingIndicator = updateChartsButton.querySelector('.loading-indicator');
 const updaterText = updateChartsButton.querySelector('.updater-text');
-const achievementImagesPath = '../images/';
+const achievementImagesPath = '/my-piggy-bank/images/';
 
 let piggyBanks = [];
 let transactionsCharts = {};
@@ -58,7 +58,7 @@ function createPiggyBank(name, goal, start, image, description, id, goalDate) {
         name,
         goal: goalNum,
         current: startNum,
-        image: image || '../no-image.png',
+        image: image || '/images/no-image.png',
         description,
         id: id || generateUUID(),
         points: startNum,
@@ -114,7 +114,7 @@ function createPiggyBankElement(piggyBank) {
     piggyBankEl.dataset.id = piggyBank.id;
     piggyBankEl.innerHTML = `
         <h3>${piggyBank.name}</h3>
-        <img class="piggy-bank-image" src="${piggyBank.image || '../no-image.png'}" alt="${piggyBank.name}">
+        <img class="piggy-bank-image" src="${piggyBank.image || '/images/no-image.png'}" alt="${piggyBank.name}">
         <div class="progress-bar">
             <div class="progress-bar-fill"></div>
             <div class="progress-text"></div>
@@ -271,7 +271,7 @@ function populateForm(piggyBank) {
     piggyBankDescriptionInput.value = piggyBank.description;
     piggyBankIdInput.value = piggyBank.id;
     piggyBankGoalDateInput.value = piggyBank.goalDate ? piggyBank.goalDate.toISOString().slice(0, 10) : '';
-    piggyBankImagePreview.src = piggyBank.image || '../no-image.png';
+    piggyBankImagePreview.src = piggyBank.image || '/images/no-image.png';
     piggyBankImagePreview.style.display = 'block';
 
     savePiggyBankBtn.textContent = 'Сохранить';
@@ -301,7 +301,7 @@ piggyBankImageInput.addEventListener('change', (event) => {
         };
         reader.readAsDataURL(file);
     } else {
-        piggyBankImagePreview.src = '../no-image.png';
+        piggyBankImagePreview.src = '/images/no-image.png';
         piggyBankImagePreview.style.display = 'none';
     }
 });
@@ -454,14 +454,14 @@ function updateLeaderboard() {
   
     // Загрузка настроек пользователя из localStorage (с обработкой ошибок)
     let userName = 'Неизвестный пользователь';
-    let userImage = '../user-icons/default.png';
+    let userImage = 'images/user-icons/default.png';
   
     try {
       const settings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
       userName = settings.username || 'Неизвестный пользователь';
       userImage = settings.userImage || userImage;
       if (!userImage || !userImage.trim()) {
-        userImage = '../user-icons/default.png';
+        userImage = 'images/user-icons/default.png';
       }
     } catch (error) {
       console.error('Ошибка при загрузке настроек:', error);
