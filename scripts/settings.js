@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const defaultUserImage = 'https://i.postimg.cc/BbG6sGBc/default.png';
+    const defaultUserImage = 'https://i.postimg.cc/BbG6sGBc/default.png'; // Ensure path is correct and accessible
 
     // Загрузка настроек из localStorage
     function loadSettings() {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.usernameInput.value = savedSettings.username || '';
         elements.themeSwitchCheckbox.checked = savedSettings.darkMode || false;
         elements.userImagePreview.src = savedSettings.userImage || defaultUserImage;
-        elements.userImagePreview.style.display = savedSettings.userImage ? 'block' : 'block'; // Ensure default image display is set
+        elements.userImagePreview.style.display = savedSettings.userImage ? 'block' : 'none'; // Ensure default image display is set
     }
 
     // Сохранение настроек в localStorage
@@ -72,14 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsDataURL(file);
         } else {
             elements.userImagePreview.src = defaultUserImage;
-            elements.userImagePreview.style.display = 'block'; // Ensure default image display is set
+            elements.userImagePreview.style.display = 'none'; // Ensure default image display is set
         }
     });
 
     // Удаление изображения профиля
     elements.removeUserImageButton.addEventListener('click', () => {
         elements.userImagePreview.src = defaultUserImage;
-        elements.userImagePreview.style.display = 'block'; // Ensure default image display is set
+        elements.userImagePreview.style.display = 'none'; // Ensure default image display is set
         const savedSettings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
         delete savedSettings.userImage;
         localStorage.setItem('piggyBankSettings', JSON.stringify(savedSettings));
@@ -94,20 +94,26 @@ document.addEventListener('DOMContentLoaded', () => {
     //Обработка темной темы
     const body = document.body;
     const header = document.querySelector('header');
-    const darkMode = localStorage.getItem('darkMode') === 'true';
 
-    if (darkMode) {
+    elements.themeSwitchCheckbox.addEventListener('change', () => {
+        if (elements.themeSwitchCheckbox.checked) {
+            body.classList.add('dark');
+            header.classList.add('dark');
+        } else {
+            body.classList.remove('dark');
+            header.classList.remove('dark');
+        }
+        localStorage.setItem('darkMode', elements.themeSwitchCheckbox.checked);
+    });
+
+    if (localStorage.getItem('darkMode') === 'true') {
         elements.themeSwitchCheckbox.checked = true;
         body.classList.add('dark');
         header.classList.add('dark');
     }
-
-    elements.themeSwitchCheckbox.addEventListener('change', () => {
-        body.classList.toggle('dark');
-        header.classList.toggle('dark');
-        localStorage.setItem('darkMode', elements.themeSwitchCheckbox.checked);
-    });
 });
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const faqItems = document.querySelectorAll('.faq-item');
@@ -124,4 +130,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Show first answer
     // faqItems[0].querySelector('.faq-answer').style.display = 'block';
 });
+
 
