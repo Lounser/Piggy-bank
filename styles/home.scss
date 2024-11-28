@@ -83,12 +83,12 @@ main{
 .theme-switch input[type="checkbox"]:checked + label {
   background-color: #f3ad21;
 }
-/* Sections */
+
 section {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  background-color: #fff; /* added background */
+  background-color: #fff; 
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -104,10 +104,10 @@ section p, section li {
   gap: 1.5rem;
   margin-top: 30px;
 }
-/* Hero Section (Adjust as needed) */
+
 .hero {
     text-align: center;
-    padding: 40px 0; /* Added padding to top and bottom */
+    padding: 40px 0;
     margin-bottom: 20px;
 }
 

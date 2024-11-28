@@ -428,11 +428,15 @@ h1 {
   font-weight: bold;
 }
 
-.stats-container p {
+#stats-container p {
   color: #333;
   transition: color 0.3s ease;
 }
-.stats-container.dark p {
+#stats-container.dark p {
+  color: #fff;
+}
+
+#stats-container.dark p {
   color: #fff;
 }
 
