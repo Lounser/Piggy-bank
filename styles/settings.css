@@ -153,16 +153,17 @@ button {
 }
 
 .faq-answer {
+  display: none; /* Скрываем по умолчанию */
   word-break: break-word; /* Разрыв слов при необходимости */
   overflow-wrap: break-word; /* Дополнительное свойство для надежности */
   transition: opacity 0.3s ease, max-height 0.3s ease;
   width: calc(100% - 20px); /* Ширина, с учетом отступов */
   overflow-y: auto;
-  opacity: 1;
 }
 
 .faq-answer.show {
   display: block;
+  opacity: 1;
 }
 
 /* Стили темной темы */
@@ -183,6 +184,10 @@ body.dark .action-button {
 
 body.dark .action-button:hover {
   background-color: var(--primary-color);
+}
+
+body.dark #username {
+  color: #333;
 }
 
 /* Стили футера */
@@ -212,6 +217,15 @@ footer {
     flex-direction: column;
     align-items: center;
     margin: 0;
+    font-size: calc(0.8em + (1vw - 0.8em) * (100vw - 600px) / 600);
+  }
+  .faq-answer p {
+    font-size: 0.8em;
+  }
+  .faq-question {
+    font-size: 0.8em;
+    padding: calc(10px + 2 * (100vw - 320px) / 1920) calc(10px + 2 * (100vw - 320px) / 1920);
+    line-height: 15px;
   }
   section {
     overflow-x: hidden;
@@ -234,6 +248,12 @@ footer {
   }
   footer {
     font-size: 0.75em;
+  }
+  input #username {
+    width: 100%;
+  }
+  button {
+    padding: calc(5px + 2 * (100vw - 320px) / 1920) calc(10px + 2 * (100vw - 320px) / 1920);
   }
 }
 .faq-answer {
