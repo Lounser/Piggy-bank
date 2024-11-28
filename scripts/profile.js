@@ -25,15 +25,15 @@ const distributionChartCanvas = document.getElementById('distributionChart');
 const updateChartsButton = document.getElementById('update-charts');
 const loadingIndicator = updateChartsButton.querySelector('.loading-indicator');
 const updaterText = updateChartsButton.querySelector('.updater-text');
-const achievementImagesPath = 'images/';
+const achievementImagesPath = '';
 
 let piggyBanks = [];
 let transactionsCharts = {};
 
 const achievements = {
-    'Золотая свинья': { goal: 10000, imagePath: 'golden-pig.png' },
-    'Серебряная свинья': { goal: 5000, imagePath: 'iron-pig.png' },
-    'Бронзовая свинья': { goal: 2500, imagePath: 'bronze-pig.png' },
+    'Золотая свинья': { goal: 10000, imagePath: 'https://i.postimg.cc/NjNf6Kr9/golden-pig.png' },
+    'Серебряная свинья': { goal: 5000, imagePath: 'https://i.postimg.cc/pLVL5fyM/iron-pig.png' },
+    'Бронзовая свинья': { goal: 2500, imagePath: 'https://i.postimg.cc/TYJPP7dc/bronze-pig.png' },
     
 };
 
