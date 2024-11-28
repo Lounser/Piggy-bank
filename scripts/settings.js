@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const defaultUserImage = 'https://i.postimg.cc/pLVL5fyM/iron-pig.png'; // Ensure path is correct and accessible
+    const defaultUserImage = 'https://i.postimg.cc/BbG6sGBc/default.png';
 
     // Загрузка настроек из localStorage
     function loadSettings() {
