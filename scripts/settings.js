@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Элементы настроек
     const elements = {
         disableProfileCharts: document.getElementById('disable-profile-charts'),
         disableTransactionCharts: document.getElementById('disable-transaction-charts'),
@@ -10,13 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
         removeUserImageButton: document.getElementById('remove-user-image'),
     };
 
+    // Проверка на существование всех элементов настроек
     if (Object.values(elements).some(el => el === null)) {
         console.error("Один или несколько элементов настроек не найдены!");
         return;
     }
 
-    const defaultUserImage = 'https://github.com/Lounser/piggy-bank/blob/cb14aa555e34f88df3a90fd207c8e720c774d932/Images/user-icons/default.png';
+    const defaultUserImage = 'images/user-icons/default.png'; // Ensure path is correct and accessible
 
+    // Загрузка настроек из localStorage
     function loadSettings() {
         const savedSettings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
         elements.disableProfileCharts.checked = savedSettings.disableProfileCharts || false;
@@ -24,9 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.usernameInput.value = savedSettings.username || '';
         elements.themeSwitchCheckbox.checked = savedSettings.darkMode || false;
         elements.userImagePreview.src = savedSettings.userImage || defaultUserImage;
-        elements.userImagePreview.style.display = savedSettings.userImage ? 'block' : 'none';
+        elements.userImagePreview.style.display = savedSettings.userImage ? 'block' : 'block'; // Ensure default image display is set
     }
 
+    // Сохранение настроек в localStorage
     function saveSettings() {
         const username = elements.usernameInput.value.trim();
         if (!username) {
@@ -34,17 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const settings = {
-            disableProfileCharts: elements.disableProfileCharts.checked,
-            disableTransactionCharts: elements.disableTransactionCharts.checked,
-            userImage: elements.userImagePreview.src,
-            username: username,
-            darkMode: elements.themeSwitchCheckbox.checked,
-        };
+        const savedSettings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
+        savedSettings.username = username;
+        savedSettings.disableProfileCharts = elements.disableProfileCharts.checked;
+        savedSettings.disableTransactionCharts = elements.disableTransactionCharts.checked;
+        savedSettings.userImage = elements.userImagePreview.src;
+        savedSettings.darkMode = elements.themeSwitchCheckbox.checked;
 
         try {
-            localStorage.setItem('piggyBankSettings', JSON.stringify(settings));
-            console.log("Настройки успешно сохранены:", settings);
+            localStorage.setItem('piggyBankSettings', JSON.stringify(savedSettings));
+            console.log("Настройки успешно сохранены:", savedSettings);
             alert('Настройки сохранены!');
         } catch (error) {
             console.error("Ошибка при сохранении настроек в localStorage:", error);
@@ -52,8 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    loadSettings();
-
+    // Обработка загрузки изображения
     elements.userImageUpload.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -70,48 +72,56 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsDataURL(file);
         } else {
             elements.userImagePreview.src = defaultUserImage;
-            elements.userImagePreview.style.display = 'block';
+            elements.userImagePreview.style.display = 'block'; // Ensure default image display is set
         }
     });
 
-    elements.saveSettingsButton.addEventListener('click', saveSettings);
-
+    // Удаление изображения профиля
     elements.removeUserImageButton.addEventListener('click', () => {
         elements.userImagePreview.src = defaultUserImage;
-        elements.userImagePreview.style.display = 'block';
+        elements.userImagePreview.style.display = 'block'; // Ensure default image display is set
         const savedSettings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
         delete savedSettings.userImage;
         localStorage.setItem('piggyBankSettings', JSON.stringify(savedSettings));
     });
 
+    // Сохранение настроек при клике на кнопку
+    elements.saveSettingsButton.addEventListener('click', saveSettings);
 
-    const themeSwitchCheckbox = elements.themeSwitchCheckbox;
+    // Загрузка начальных настроек
+    loadSettings();
+
+    //Обработка темной темы
     const body = document.body;
     const header = document.querySelector('header');
-
     const darkMode = localStorage.getItem('darkMode') === 'true';
+
     if (darkMode) {
-        themeSwitchCheckbox.checked = true;
+        elements.themeSwitchCheckbox.checked = true;
         body.classList.add('dark');
         header.classList.add('dark');
     }
 
-    themeSwitchCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            body.classList.add('dark');
-            header.classList.add('dark');
-        } else {
-            body.classList.remove('dark');
-            header.classList.remove('dark');
-        }
-        localStorage.setItem('darkMode', this.checked);
-    });
-
-    const faqQuestions = document.querySelectorAll('.faq-question');
-    faqQuestions.forEach(question => {
-        question.addEventListener('click', () => {
-            const answer = question.nextElementSibling;
-            answer.classList.toggle('show');
-        });
+    elements.themeSwitchCheckbox.addEventListener('change', () => {
+        body.classList.toggle('dark');
+        header.classList.toggle('dark');
+        localStorage.setItem('darkMode', elements.themeSwitchCheckbox.checked);
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        const questionButton = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+
+        questionButton.addEventListener('click', () => {
+            answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
+        });
+    });
+
+    // Show first answer
+    // faqItems[0].querySelector('.faq-answer').style.display = 'block';
+});
+

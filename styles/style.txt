@@ -18,6 +18,128 @@ body {
   color: $text-color;
   overflow-x: hidden;
   // padding: 20px;
+  font-size: 0.9rem;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-image {
+  max-width: 80%;
+  max-height: 80%;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+.achievement-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  // background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transform: scale(0.8); /* Начальное масштабирование */
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  pointer-events: none; /* Блокируем события пока анимация не закончится */
+}
+
+.achievement-modal.zoom-in {
+  animation: zoomIn 0.5s ease-in-out forwards;
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto; /* Разрешаем события после анимации */
+}
+
+.achievement-modal.fade-out {
+  animation: fadeOut 0.3s ease-out forwards;
+  pointer-events: none;
+}
+
+.achievement-modal-content {
+  background-color: #fff; /* белый фон */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 400px;
+  width: 80%;
+  margin: 0 auto;
+  position: relative; /* Для правильного позиционирования кнопки закрытия */
+}
+
+.achievement-modal img {
+  max-width: 150px;
+  max-height: 150px;
+  margin-bottom: 10px;
+}
+
+.achievement-modal p {
+  margin-bottom: 5px;
+}
+
+.achievement-modal-close {
+  position: absolute; /* абсолютное позиционирование */
+  top: 10px;
+  right: 10px; /* расположение в правом верхнем углу */
+  background-color: #f44336; /* красный цвет */
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+
+@keyframes zoomIn {
+  from {
+      transform: scale(0.8);
+      opacity: 0;
+  }
+  to {
+      transform: scale(1);
+      opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+  to {
+      opacity: 0;
+  }
+}
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    display: none; /* Hidden by default */
+    margin-top: 2px;
 }
 #navigation {
   padding: 30px;
@@ -27,7 +149,7 @@ body {
     font-size: 1.5em;
     margin-bottom: 20px;
     text-align: center;
-    color: $text-color;
+    color: #333;
     transition: color 0.3s ease;
     &:hover {
       color: $over-goal-color;
@@ -57,7 +179,7 @@ body {
   font-size: 1.5em;
   margin-bottom: 20px;
   text-align: center;
-  color: $text-color;
+  color: #333;
   transition: color 0.3s ease;
 }
 h1 {
@@ -70,6 +192,8 @@ h1 {
   margin: 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  
 
 }
 .theme-switch input[type="checkbox"] {
@@ -80,14 +204,21 @@ h1 {
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 20px;
-  background-color: #ddd;
   transition: background-color 0.3s ease;
+  
 }
 
 .theme-switch input[type="checkbox"]:checked + label {
   background-color: #f3ad21;
 }
+.theme-switch.dark label {
+  background-color: #ff0000; // Darker background for dark mode
+  color: #fff; // White text for better contrast
+}
 
+.theme-switch.dark input[type="checkbox"]:checked + label {
+  background-color: #f3ad21; // Retain highlight color when checked
+}
 #filters {
   display: flex;
   align-items: center;
@@ -324,9 +455,14 @@ h1 {
 #statistics span {
   font-weight: bold;
 }
-.stats-container{
-  p{
-    color: lighten($text-color, $amount: 20);
+.stats-container {
+  p {
+    color: #333;
+    transition: color 0.3s ease;
+  }
+
+  &.dark p {
+    color: #fff;
   }
 }
 #leaderboard {
@@ -369,7 +505,7 @@ h1 {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #ccc;
+  background-color: #dedede;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -489,7 +625,7 @@ body.dark {
 }
 
 .theme-switch input[type=checkbox]:checked + label.dark {
-  background-color: #1f1f1f;
+  background-color: #f3ad21;
   color: #fff;
 }
 
@@ -509,6 +645,7 @@ body.dark {
 
 #statistics.dark {
   background-color: #303030;
+  color: #fff;
 }
 
 #leaderboard.dark {
@@ -552,62 +689,15 @@ body.dark .piggy-bank {
   flex: 1; 
   margin: 0 5px; 
 }
+.action-button{
+  display: flex;
+  justify-content: center;
+  justify-content: space-between;
+}
 .block_button {
   display: flex;
   gap: 15px;
   justify-content: space-between;
-}
-@media (max-width: 590px) {
-  body {
-    padding: 10px;
-  }
-  .add-amount-container button{
-    width: 100%;
-  }
-  .add-amount{
-    width: 95%;
-  }
-  .subtract-amount{
-    width: 95%;
-  }
-  h1 {
-    font-size: 2em;
-    margin-bottom: 15px;
-  }
-
-  #add-piggy-bank {
-    padding: 20px;
-  }
-
-  #add-piggy-bank input,
-  #add-piggy-bank textarea {
-    padding: 5px;
-    font-size: 16px;
-  }
-
-  .piggy-bank {
-    padding: 20px;
-  }
-
-  .add-amount-container {
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .actions-container button {
-    margin: 5px 5px;
-    gap: 10px;
-  }
-  .block_button{
-    gap: 10px;
-  }
-  #filters {
-    flex-direction: column;
-    gap: 5px;
-  }
-  .block_button {
-    flex-direction: column;
-  }
 }
 .transactions-container{
     // scrollbar-height: 300px;
@@ -618,13 +708,12 @@ body.dark .piggy-bank {
   display: flex;
   justify-content: center;
   margin-top: 10px;
-  background: $over-goal-color;
+  background: #f3ad21;
   color: #fff;
   padding: 10px 20px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
   font-weight: bold;
   transition: background-color 0.3s ease;
 
@@ -683,7 +772,20 @@ body.light {
 body.dark {
   animation: dark-theme 0.3s ease-in-out forwards;
 }
+.achievement-modal.dark {
+  background-color: #303030;
+  color: #fff;
+}
 
+.achievement-modal-content.dark {
+  background-color: #444;
+  color: #fff;
+}
+
+.achievement-modal-close.dark {
+  background-color: #ff0000;
+  color: #fff;
+}
 @keyframes light-theme {
   0% {
     background-color: #212121;
@@ -766,12 +868,222 @@ body.dark #navigation a {
     transform: scale(0.8) rotate(90deg);
   }
 }
-
-
 .achievement{
   display: flex;
   align-items: center;
   margin: 0 5px;
   justify-content: center;
   width: 100%;
+
+}
+.leaderboard-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.user-info .username {
+  margin-left: 5px; 
+}
+
+@media (max-width: 590px) {
+  body {
+    padding: 10px;
+  }
+  .add-amount-container button{
+    width: 100%;
+  }
+  .add-amount{
+    width: 95%;
+  }
+  .subtract-amount{
+    width: 95%;
+  }
+  h1 {
+    font-size: 2em;
+    margin-bottom: 15px;
+  }
+
+  #add-piggy-bank {
+    padding: 20px;
+  }
+
+  #add-piggy-bank input,
+  #add-piggy-bank textarea {
+    padding: 5px;
+    font-size: 16px;
+  }
+
+  .piggy-bank {
+    padding: 20px;
+  }
+
+  .add-amount-container {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .actions-container button {
+    margin: 5px 5px;
+    gap: 10px;
+  }
+  .block_button{
+    gap: 10px;
+  }
+  #filters {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .block_button {
+    flex-direction: column;
+  }
+}
+@media (max-width: 498px) {
+  body {
+    font-size: 0.75rem;
+    
+  }
+  #navigation {
+    padding: 5px;
+    gap: 5px;
+  }
+  #leaderboard{
+    width: 80%;
+  }
+  #welcome-message {
+    font-size: 1em;
+  }
+  h1 {
+    font-size: 1.5em;
+  }
+  #add-piggy-bank {
+    padding: 10px;
+  }
+  #add-piggy-bank input,
+  #add-piggy-bank textarea {
+    font-size: 14px;
+    padding: 5px;
+  }
+  .piggy-bank {
+    padding: 10px;
+  }
+  .piggy-bank h3 {
+    font-size: 1.5em;
+  }
+  .piggy-bank .piggy-bank-image {
+    height: 100px;
+  }
+  .actions-container {
+    flex-direction: column;
+  }
+  .actions-container button {
+    margin: 5px 0;
+  }
+  #filters {
+    gap: 5px;
+  }
+  #filters input, #filters select, #apply-filters{
+    padding: 5px;
+    font-size: 14px;
+  }
+  #statistics, #leaderboard {
+    padding: 10px;
+  }
+    #statistics div{
+      width: 100%;
+    }
+
+  .transactions-container {
+    max-height: 200px;
+  }
+
+}
+@media (max-width: 768px) {
+  /* Responsive adjustments for tablets and smaller screens */
+  #add-piggy-bank,
+  #statistics,
+  #leaderboard {
+    width: 95%; /* Take up almost the full width on smaller screens */
+    margin: 10px auto; /* Center horizontally */
+  }
+  #add-piggy-bank .form-group,
+  #add-piggy-bank .block_button {
+    margin-bottom: 10px; /* Space between form elements */
+  }
+  #add-piggy-bank h2,
+  #statistics h2,
+  #leaderboard h2 {
+    font-size: 1.2em; /* Reduce heading size */
+  }
+
+  #add-piggy-bank label{
+    font-size: 14px;
+  }
+  #piggy-banks-container{
+    gap:5px;
+  }
+
+  }
+  #add-piggy-bank input,
+  #add-piggy-bank textarea,
+  #add-piggy-bank select {
+    width: 100%; /* Full width inputs for mobile */
+    box-sizing: border-box;
+  }
+
+  #add-piggy-bank #piggy-bank-image-preview {
+    max-width: 100%; /* Image scales to fit the width */
+  }
+
+  #add-piggy-bank .block_button {
+    flex-direction: column; /* Stack buttons vertically */
+  }
+
+  #add-piggy-bank .block_button button {
+    width: 100%; /* Full width buttons */
+    margin-bottom: 5px; /* Space between buttons */
+  }
+
+
+  #statistics .stats-container,
+  #statistics .charts-container {
+    width: 100%; /* Full width for stats and charts */
+    margin: 0;
+  }
+  #statistics .charts-container {
+    display: flex;
+    flex-direction: column; /*Stack charts vertically */
+    align-items: center;
+  }
+  #statistics canvas {
+      max-width: 100%; /* Charts resize to fit width */
+  }
+  #leaderboard-list li {
+    flex-direction: column; /* Stack items vertically */
+    gap: 15px;
+    align-items: flex-start; /* Align text to the left */
+  }
+  #leaderboard-list li .achievements {
+      margin-left: 0;
+  }
+    #leaderboard-list li .achievement {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 5px;
+    }
+
+  .transactions-container{
+    max-height: 250px;
+  }
+.rickroll a{
+  color: #fff;
+  background: #f3ad21;
+  padding: 7px 20px;
+  border-radius: 5px;
 }

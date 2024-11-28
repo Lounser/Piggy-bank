@@ -153,9 +153,12 @@ button {
 }
 
 .faq-answer {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  display: none; /* Скрываем по умолчанию */
+  word-break: break-word; /* Разрыв слов при необходимости */
+  overflow-wrap: break-word; /* Дополнительное свойство для надежности */
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  width: calc(100% - 20px); /* Ширина, с учетом отступов */
+  overflow-y: auto;
 }
 
 .faq-answer.show {

@@ -149,7 +149,7 @@ body {
     font-size: 1.5em;
     margin-bottom: 20px;
     text-align: center;
-    color: $text-color;
+    color: #333;
     transition: color 0.3s ease;
     &:hover {
       color: $over-goal-color;
@@ -179,7 +179,7 @@ body {
   font-size: 1.5em;
   margin-bottom: 20px;
   text-align: center;
-  color: $text-color;
+  color: #333;
   transition: color 0.3s ease;
 }
 h1 {
@@ -645,14 +645,18 @@ body.dark {
 
 #statistics.dark {
   background-color: #303030;
+  color: #fff;
+  .chartjs-legend li span {
+    background-color: #fff;
+  }
 }
-
 #leaderboard.dark {
-  background-color: #303030;
+  background-color: #303030; /* Или другой темный фон */
+  color: #fff; /* Белый текст */
 }
 
 #leaderboard-list.dark li {
-  border-bottom: 1px solid #666;
+  border-bottom: 1px solid #666; /* Темная линия разделителя */
 }
 
 #leaderboard-list.dark li .achievement {

@@ -25,7 +25,7 @@ const distributionChartCanvas = document.getElementById('distributionChart');
 const updateChartsButton = document.getElementById('update-charts');
 const loadingIndicator = updateChartsButton.querySelector('.loading-indicator');
 const updaterText = updateChartsButton.querySelector('.updater-text');
-const achievementImagesPath = 'https://github.com/Lounser/piggy-bank/tree/63d70d9b13898b363ceb090689fab0ad92c843c6/Images';
+const achievementImagesPath = '/my-piggy-bank/images/';
 
 let piggyBanks = [];
 let transactionsCharts = {};
@@ -96,12 +96,10 @@ function loadPinnedPiggyBanks() {
 }
 function renderPiggyBanks(filteredBanks = piggyBanks) {
     piggyBanksContainer.innerHTML = '';
-    const sortedBanks = [...filteredBanks].sort((a, b) => b.isPinned - a.isPinned);
+    const sortedBanks = [...filteredBanks].sort((a, b) => b.isPinned - a.isPinned); 
     sortedBanks.forEach(piggyBank => {
         const piggyBankEl = createPiggyBankElement(piggyBank);
         piggyBanksContainer.appendChild(piggyBankEl);
-        attachPiggyBankListeners(piggyBankEl, piggyBank);
-        createTransactionsChart(piggyBank);
     });
     updateStatistics(filteredBanks);
     updateLeaderboard();
@@ -188,21 +186,26 @@ function addTransactionListeners(piggyBankEl, piggyBank) {
 
 function handleTransaction(bank, amountInput, balanceSpan, type) {
     const amount = parseFloat(amountInput.value);
-    if (!isNaN(amount) && amount > 0) {
-        bank.current += (type === 'add' ? amount : -amount);
-        // bank.points += (type === 'add' ? amount : -amount); 
-        bank.transactions.push({ amount, date: new Date(), type });
-        amountInput.value = '';
-        balanceSpan.textContent = bank.current;
-        updateProgressBar(bank);
-        updateStatistics(piggyBanks);
-        updateLeaderboard();
-        savePiggyBanks();
-        updateTransactionsList(bank);
-        createTransactionsChart(bank);
-    } else {
-        alert('Введите корректное число.');
+    if (isNaN(amount) || amount <= 0) {
+        alert('Введите корректное положительное число.');
+        return;
     }
+
+    if (type === 'subtract' && amount > bank.current) {
+        alert('Нельзя снять больше, чем есть на счету.');
+        return;
+    }
+
+    bank.current += (type === 'add' ? amount : -amount);
+    bank.transactions.push({ amount, date: new Date(), type });
+    amountInput.value = '';
+    balanceSpan.textContent = bank.current.toFixed(2); // Fix for potential floating-point errors
+    updateProgressBar(bank);
+    updateStatistics(piggyBanks);
+    updateLeaderboard();
+    savePiggyBanks();
+    updateTransactionsList(bank);
+    createTransactionsChart(bank);
 }
 
 function updateTransactionsList(piggyBank, piggyBankEl) {
@@ -311,29 +314,51 @@ function validateForm() {
     const name = piggyBankNameInput.value.trim();
     const goal = parseFloat(piggyBankGoalInput.value);
     const start = parseFloat(piggyBankStartInput.value);
+    const goalDate = piggyBankGoalDateInput.value;
 
-    const nameErrorMessage = piggyBankNameInput.nextElementSibling;
-    const goalErrorMessage = piggyBankGoalInput.nextElementSibling;
-    const startErrorMessage = piggyBankStartInput.nextElementSibling;
+    const nameError = document.getElementById('piggy-bank-name-error'); // Use more descriptive IDs
+    const goalError = document.getElementById('piggy-bank-goal-error');
+    const startError = document.getElementById('piggy-bank-start-error');
+    const goalDateError = document.getElementById('piggy-bank-goal-date-error');
 
-    nameErrorMessage.style.display = 'none';
-    goalErrorMessage.style.display = 'none';
-    startErrorMessage.style.display = 'none';
+    // Clear previous errors
+    clearErrorMessages();
 
     if (!name) {
-        nameErrorMessage.style.display = 'block';
+        showError(nameError, 'Название копилки обязательно');
         isValid = false;
     }
     if (isNaN(goal) || goal <= 0) {
-        goalErrorMessage.style.display = 'block';
+        showError(goalError, 'Цель должна быть числом больше 0');
         isValid = false;
     }
     if (isNaN(start) || start < 0) {
-        startErrorMessage.style.display = 'block';
+        showError(startError, 'Начальная сумма должна быть числом больше или равно 0');
         isValid = false;
     }
-
+    if (goalDate && !isValidDate(goalDate)) {
+        showError(goalDateError, 'Неверный формат даты');
+        isValid = false;
+    }
     return isValid;
+}
+
+function showError(element, message) {
+    element.textContent = message;
+    element.style.display = 'block';
+}
+
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(element => {
+      element.textContent = '';
+      element.style.display = 'none';
+    });
+}
+
+
+function isValidDate(dateString) {
+    return !isNaN(new Date(dateString).getTime()); // More robust date validation
 }
 
 // Save piggy bank
@@ -354,31 +379,22 @@ savePiggyBankBtn.addEventListener('click', () => {
 cancelPiggyBankBtn.addEventListener('click', clearForm);
 
 // Theme switch
-themeSwitchCheckbox.addEventListener('change', (event) => {
-    const isDark = event.target.checked;
-    document.body.classList.toggle('dark', isDark);
-    document.querySelector('.theme-switch label').classList.toggle('dark', isDark);
-    document.getElementById('add-piggy-bank').classList.toggle('dark', isDark);
-    document.getElementById('statistics').classList.toggle('dark', isDark);
-    document.getElementById('stats-container').classList.toggle('dark', isDark);
-    document.getElementById('leaderboard').classList.toggle('dark', isDark);
-    document.getElementById('piggy-banks-container').classList.toggle('dark', isDark);
-    document.getElementById('welcome-message').classList.toggle('dark', isDark);
-    document.getElementById('stats-container').classList.toggle('dark', isDark);
-    document.querySelectorAll('.fa-sun, .fa-moon').forEach(icon => icon.classList.toggle('light', !isDark));
+themeSwitchCheckbox.addEventListener('change', ({ target: { checked: isDark } }) => {
+    const classList = document.body.classList;
+    classList.toggle('dark', isDark);
+    document.querySelectorAll('.theme-switch label, #add-piggy-bank, #statistics, #stats-container, #leaderboard, #piggy-banks-container, #welcome-message')
+        .forEach(el => el.classList.toggle('dark', isDark));
+    document.querySelectorAll('.fa-sun, .fa-moon')
+        .forEach(icon => icon.classList.toggle('light', !isDark));
     localStorage.setItem('darkMode', isDark);
-    
 });
+
 
 if (localStorage.getItem('darkMode') === 'true') {
     themeSwitchCheckbox.checked = true;
     document.body.classList.add('dark');
-    document.querySelector('.theme-switch label').classList.add('dark');
-    document.getElementById('add-piggy-bank').classList.add('dark');
-    document.getElementById('statistics').classList.add('dark');
-    document.getElementById('leaderboard').classList.add('dark');
-    document.getElementById('piggy-banks-container').classList.add('dark');
-    document.getElementById('welcome-message').classList.add('dark');
+    document.querySelectorAll('.theme-switch label, #add-piggy-bank, #statistics, #leaderboard, #piggy-banks-container, #welcome-message')
+        .forEach(el => el.classList.add('dark'));
     document.querySelectorAll('.fa-sun, .fa-moon').forEach(icon => icon.classList.add('light'));
 }
 // Apply filters
@@ -699,9 +715,13 @@ function loadPiggyBanks() {
 
 // Save piggy banks to localStorage
 function savePiggyBanks() {
-    localStorage.setItem('piggyBanks', JSON.stringify(piggyBanks));
+    try {
+        localStorage.setItem('piggyBanks', JSON.stringify(piggyBanks));
+    } catch (error) {
+        console.error('Ошибка сохранения данных в localStorage:', error);
+        // Возможно, вывести сообщение пользователю
+    }
 }
-
 // Doughnut chart
 let distributionChart;
 let distributionChartLoading = false;
@@ -886,10 +906,10 @@ function generateColors(numColors) {
 
 // Add piggy bank listeners (only once)
 function attachPiggyBankListeners(piggyBankEl, piggyBank) {
-  if (!piggyBankEl.dataset.hasEventListeners) {
-    addTransactionListeners(piggyBankEl, piggyBank);
-    addEditDeleteListeners(piggyBankEl, piggyBank);
-    piggyBankEl.dataset.hasEventListeners = true;
+    if (!piggyBankEl.dataset.hasEventListeners) {
+        addTransactionListeners(piggyBankEl, piggyBank);
+        addEditDeleteListeners(piggyBankEl, piggyBank);
+        piggyBankEl.dataset.hasEventListeners = true;
     const pinButton = piggyBankEl.querySelector('.pin-button');
     pinButton.addEventListener('click', () => {
         piggyBank.isPinned = !piggyBank.isPinned;
