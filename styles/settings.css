@@ -153,17 +153,16 @@ button {
 }
 
 .faq-answer {
-  display: none; /* Скрываем по умолчанию */
   word-break: break-word; /* Разрыв слов при необходимости */
   overflow-wrap: break-word; /* Дополнительное свойство для надежности */
   transition: opacity 0.3s ease, max-height 0.3s ease;
   width: calc(100% - 20px); /* Ширина, с учетом отступов */
   overflow-y: auto;
+  opacity: 1;
 }
 
 .faq-answer.show {
   display: block;
-  opacity: 1;
 }
 
 /* Стили темной темы */
