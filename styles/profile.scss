@@ -455,7 +455,7 @@ h1 {
 #statistics span {
   font-weight: bold;
 }
-.stats-container {
+#stats-container {
   p {
     color: #333;
     transition: color 0.3s ease;
@@ -464,6 +464,9 @@ h1 {
   &.dark p {
     color: #fff;
   }
+}
+#stats-container.dark p {
+  color: #fff;
 }
 #leaderboard {
   margin-top: 20px;

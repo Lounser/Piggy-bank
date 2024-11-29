@@ -186,6 +186,10 @@ body.dark .action-button:hover {
   background-color: var(--primary-color);
 }
 
+body.dark #username {
+  color: #333;
+}
+
 /* Стили футера */
 footer {
   display: flex;
@@ -213,6 +217,15 @@ footer {
     flex-direction: column;
     align-items: center;
     margin: 0;
+    font-size: calc(0.8em + (1vw - 0.8em) * (100vw - 600px) / 600);
+  }
+  .faq-answer p {
+    font-size: 0.8em;
+  }
+  .faq-question {
+    font-size: 0.8em;
+    padding: calc(10px + 2 * (100vw - 320px) / 1920) calc(10px + 2 * (100vw - 320px) / 1920);
+    line-height: 15px;
   }
   section {
     overflow-x: hidden;
@@ -235,6 +248,12 @@ footer {
   }
   footer {
     font-size: 0.75em;
+  }
+  input #username {
+    width: 100%;
+  }
+  button {
+    padding: calc(5px + 2 * (100vw - 320px) / 1920) calc(10px + 2 * (100vw - 320px) / 1920);
   }
 }
 .faq-answer {

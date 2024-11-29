@@ -25,15 +25,15 @@ const distributionChartCanvas = document.getElementById('distributionChart');
 const updateChartsButton = document.getElementById('update-charts');
 const loadingIndicator = updateChartsButton.querySelector('.loading-indicator');
 const updaterText = updateChartsButton.querySelector('.updater-text');
-const achievementImagesPath = '/my-piggy-bank/images/';
+const achievementImagesPath = '';
 
 let piggyBanks = [];
 let transactionsCharts = {};
 
 const achievements = {
-    'Золотая свинья': { goal: 10000, imagePath: 'golden-pig.png' },
-    'Серебряная свинья': { goal: 5000, imagePath: 'iron-pig.png' },
-    'Бронзовая свинья': { goal: 2500, imagePath: 'bronze-pig.png' },
+    'Золотая свинья': { goal: 10000, imagePath: 'https://i.postimg.cc/NjNf6Kr9/golden-pig.png' },
+    'Серебряная свинья': { goal: 5000, imagePath: 'https://i.postimg.cc/pLVL5fyM/iron-pig.png' },
+    'Бронзовая свинья': { goal: 2500, imagePath: 'https://i.postimg.cc/TYJPP7dc/bronze-pig.png' },
     
 };
 
@@ -470,14 +470,14 @@ function updateLeaderboard() {
   
     // Загрузка настроек пользователя из localStorage (с обработкой ошибок)
     let userName = 'Неизвестный пользователь';
-    let userImage = 'images/user-icons/default.png';
+    let userImage = 'https://i.postimg.cc/BbG6sGBc/default.png';
   
     try {
       const settings = JSON.parse(localStorage.getItem('piggyBankSettings')) || {};
       userName = settings.username || 'Неизвестный пользователь';
       userImage = settings.userImage || userImage;
       if (!userImage || !userImage.trim()) {
-        userImage = 'images/user-icons/default.png';
+        userImage = 'https://i.postimg.cc/BbG6sGBc/default.png';
       }
     } catch (error) {
       console.error('Ошибка при загрузке настроек:', error);
