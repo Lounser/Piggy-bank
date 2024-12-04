@@ -114,21 +114,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-document.addEventListener('DOMContentLoaded', () => {
-    const faqItems = document.querySelectorAll('.faq-item');
-
-    faqItems.forEach(item => {
-        const questionButton = item.querySelector('.faq-question');
-        const answer = item.querySelector('.faq-answer');
-
-        questionButton.addEventListener('click', () => {
-            answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
-        });
-    });
-
-    // Show first answer
-    // faqItems[0].querySelector('.faq-answer').style.display = 'block';
-});
-
-

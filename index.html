@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,73 +11,155 @@
     <link rel="shortcut icon" href="images/favicon.png" type="image/png">
     <title>Piggy Bank - Главная</title>
 </head>
-<body>
-    <header>
-        <nav id="navigation">
-            <ul>
-                <li><a href="profile.html"><img src="https://img.icons8.com/?size=100&id=R2rV4MQlV0ot&format=png&color=000000" alt="Профиль" width="24" height="24">Профиль</a></li>
-                <li><a href="index.html"><img src="https://img.icons8.com/?size=100&id=jDwpGuHnarDq&format=png&color=000000" alt="Главная" width="24" height="24">Главная</a></li>
-                <li><a href="settings.html"><img src="https://img.icons8.com/?size=100&id=N1xaXJg6g2Eq&format=png&color=000000" alt="Настройки" width="24" height="24">Настройки</a></li>
+
+<body class="body-class">
+    <header class="header-class">
+        <nav id="navigation" class="navigation-class" role="navigation" aria-label="Основная навигация">
+            <ul class="nav-list">
+                <li class="nav-item"><a class="nav-link" href="../profile.html"><img class="nav-icon" src="https://img.icons8.com/?size=100&id=R2rV4MQlV0ot&format=png&color=000000" alt=" " width="24" height="24">Профиль</a></li>
+                <li class="nav-item"><a class="nav-link" href="../index.html"><img class="nav-icon" src="https://img.icons8.com/?size=100&id=jDwpGuHnarDq&format=png&color=000000" alt=" " width="24" height="24">Главная</a></li>
+                <li class="nav-item"><a class="nav-link" href="../settings.html"><img class="nav-icon" src="https://img.icons8.com/?size=100&id=N1xaXJg6g2Eq&format=png&color=000000" alt=" " width="24" height="24">Параметры</a></li>
             </ul>
         </nav>
-        <h3 style="margin-bottom: 1rem;">Главная</h3>
+        <div class="main-header">
+            <h1 class="main-title">PIGGY BANK</h1>
+            <h2 id="welcome-message">Мы сохраним ваши деньги</h2>
+        </div>
+
+        <h3 class="main-title">Главная</h3>
         <div class="theme-switch">
-            <input type="checkbox" id="theme-switch-checkbox">
-            <label for="theme-switch-checkbox">Темная тема</label>
+            <input class="theme-switch-checkbox" type="checkbox" id="theme-switch-checkbox"> <label class="theme-switch-label" for="theme-switch-checkbox">Темная тема</label>
         </div>
     </header>
 
-    <main>
+    <main class="main-content">
         <section class="section-block">
-            
-            <h2>Начните экономить деньги сегодня!</h2>
-            <p>Создайте свою первую копилку и начните отслеживать свои сбережения.</p>
-            <button href="profile.html" class="action-button"><a href="profile.html"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADfUlEQVR4nO2ZaYhOURjHf8MwTbYsY/kiIZGl8AlJsn1ASnZpfLBM2aMsSZaRFyVCdoUSgyIRje2DbcwkZM8khuxjz2Rp9NT/rdswzL3nvPPp/upp5u3O///Muffcc57nvBATExMTE5N60oAZwD3gB1Cu+ACUAk+BYuA2cA3IBw4Du4ENwApgPjAPmKIYBYxU2Odp+pvlQAJYpWvpPgeyOfDPV3dcAOr4GEQ3GZbpLmYErtUFGgJNgNZAJ6AHMFB3cxIwG1gMrAa2KfYCecA5eZ8GPuqJrwFOAZ+AZ7q+0sdAFshsK/4ZDywCmgJngCygP/AK6AUMUm4boDMJmdn8rQ4uahD2lG8o92sfxmtlNk8vffMK11uQGq4CG5X7jQ/DdTKboykQnK+1tRCkgg5Ae+V+68Nwg8xmUr3UAp4r9zsfhptkZut8EFuFOpJaspTb9ipntsgsx8GjALgccVUrB97jge0ymxxRny69VQRhyfU5kH0yy46orye9bXBR3pNylULOHJGZ7eou8zzKXpAhre36zpyU2ZCI+pbSW2EZlkyHp/kH52XWL6K+nfQPI2jrSPsZTzusmfWMqO8i/U2H9+sLHrgpM6uC/0ZaYLClimJFEXA3MD3yFMkqOKGobNo2kParj4E8kNmAf/QFVxx7jq+6IRVp6HPVeiyzEnWJlZGmxI3Um7QBugPTpS8ERgQ6wimqqC0G/2fFK/ExkBcyaxZRP0z6YxG0baW16enMO5ltVMkQltHSH3ToTgvwwBeZLVIbG5Zs6fdE0PaV9iwe+C4z6z2MmiH1Ux1a5ZHSHsIDv2R2ScXb+pD6WdKH1RFYKGxaO1MmM3vMjR0OLxIO2lw88Flm6apGO1Sy5lfGfOkXRsg9W1o7N/C2ahVq47ql9b2qNNFg7GdYcpTbulRnXlZhZ08VE5V7lw+zEpklj4FahZxaLoxW7v0+zO4EDh/yNTA7FjK64g+7UUv1u5Uvc4Exym2FpjM7AoXbBO0nmWqBreo1eutUMEkfoEaEbvCRjkxb6SzrqHLbybwzdjD9TYYndb51HXgCDAXGqkTPUbG4RIVmMxWRwUhupvX1uaU0nVVg5moGjAuU/2VqzrwwXH1GdX+lUBaxvvvvHJ6hXXan5u0JfTVQpBPzYj2N0kAkSxyLnxWuJb8kui+Ps8Bx4ACwTK1ATExMTEwMqeY3kjtRiOcVpuUAAAAASUVORK5CYII=" alt="plus-2-math">Добавить Копилку</a></button>
+            <h2 class="section-title">Начните экономить деньги сегодня!</h2>
+            <p class="section-description">Создайте свою первую копилку и начните отслеживать свои сбережения.</p>
+            <button class="action-button"><a class="link-button" href="profile.html"><img class="add-icon" src="./Images/user-icons/default.png" alt="plus-2-math">Добавить Копилку</a></button>
         </section>
 
-        <section>
-            <h3>Как это работает?</h3>
-            <br>
-            <ol>
-                <li>Создайте копилку для каждой цели</li>
-                <li>Добавьте начальную сумму и отслеживайте прогресс</li>
-                <li>Обновляйте баланс и следите за достижениями</li>
+        <section class="how-it-works">
+            <h3 class="section-subtitle">Как это работает?</h3>
+            <ol class="instructions-list">
+                <li class="instruction-item">Создайте копилку для каждой цели</li>
+                <li class="instruction-item">Добавьте начальную сумму и отслеживайте прогресс</li>
+                <li class="instruction-item">Обновляйте баланс и следите за достижениями</li>
             </ol>
         </section>
 
-        <section>
-            <h3>Преимущества использования</h3>
-            <br>
-            <ul>
-                <li>Простота управления финансами</li>
-                <li>Визуализация целей экономии</li>
-                <li>Доступность статистики и отчетов</li>
+        <section class="advantages-section">
+            <h3 class="section-subtitle">Преимущества использования</h3>
+            <ul class="advantages-list">
+                <li class="advantage-item">Простота управления финансами</li>
+                <li class="advantage-item">Визуализация целей экономии</li>
+                <li class="advantage-item">Доступность статистики и отчетов</li>
             </ul>
         </section>
 
-        <section>
-            <h3>Отзывы пользователей</h3>
-            <br>
-            
-            <blockquote>
-                <p>"Отличное приложение для контроля расходов и накоплений!"</p>
-                <p><span style="color: #e2ba17; font-size: 1.5em">★★★★★</span></p>
-                <cite>- Иван Иванов</cite>
+        <section class="feedback-section">
+            <h3 class="section-subtitle">Отзывы пользователей</h3>
+            <blockquote class="user-feedback">
+                <p class="feedback-quote">"Отличное приложение для контроля расходов и накоплений!"</p>
+                <p class="feedback-rating"><span class="rating-stars" style="color: #e2ba17; font-size: 1.5em">★★★★★</span></p>
+                <cite class="feedback-author">- Иван Иванов</cite>
             </blockquote>
-            <br>
-            <blockquote>
-                <p>"С помощью Piggy Bank я смогла накопить на отпуск моей мечты!"</p>
-                <p><span style="color: #e2ba17; font-size: 1.5em">★★★★</p>
-                <cite>- Ольга Петрова</cite>
+            <blockquote class="user-feedback">
+                <p class="feedback-quote">"С помощью Piggy Bank я смогла накопить на отпуск моей мечты!"</p>
+                <p class="feedback-rating"><span class="rating-stars" style="color: #e2ba17; font-size: 1.5em">★★★★</span></p>
+                <cite class="feedback-author">- Ольга Петрова</cite>
             </blockquote>
+        </section>
+
+        
+        <section class="faq-section">
+            <button class="tutorial-button" id="tutorial-button" style="padding: 15px 0px">Новый в Piggy Bank? Узнайте, как использовать!</button>
+            <h3 class="faq-title">Часто задаваемые вопросы</h3>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">Как начать использовать приложение?</div>
+                    <div class="faq-answer">Создайте свою первую копилку и начните экономить!</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Безопасно ли хранить деньги в приложении?</div>
+                    <div class="faq-answer">Нет, все данные не защищены и не шифруются для вашей безопасности.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Можно ли использовать приложение без интернета?</div>
+                    <div class="faq-answer">Попробуйте и дайте отзыв, мне самому интересно</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="saving-tips">
+            <h3 class="section-subtitle">Советы по экономии</h3>
+            <div class="tips-container">
+                <div class="tooltip-container">
+                    <div class="tooltip" id="tooltip-1">
+                        <div class="tooltip-icon"> </div>
+                        <div class="tooltip-text">
+                            <h4>Составьте бюджет и следуйте ему</h4>
+                            <p>Планируйте свои расходы заранее!</p>
+                        </div>
+                    </div>
+                    <div class="tooltip" id="tooltip-2">
+                        <div class="tooltip-icon"> </div>
+                        <div class="tooltip-text">
+                            <h4>Сократите ненужные расходы</h4>
+                            <p>Вы можете готовить дома!</p>
+                        </div>
+                    </div>
+                    <div class="tooltip" id="tooltip-3">
+                        <div class="tooltip-icon"> </div>
+                        <div class="tooltip-text">
+                            <h4>Используйте купоны и акции при покупках</h4>
+                            <p>Следите за скидками!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <h3 class="section-subtitle">Контакты</h3>
+            <p class="contact-info">Если у вас есть вопросы или предложения, свяжитесь с нами:</p>
+            <ul class="contact-list">
+                <li class="contact-item">Email: ne_scam@piggybank.com</li>
+                <li class="contact-item">Телефон: +7 (995) - 412 - 09 66</li>
+            </ul>
+        </section>
+
+        <section class="social-media-section">
+            <h3 class="section-subtitle">Следите за нами в социальных сетях</h3>
+            <ul class="social-media-list">
+                <li class="social-media-item"><a class="social-media-link" href="https://t.me/+M6SALwKwoeUzZTVi">Telegram</a></li>
+            </ul>
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2024 My Piggy Bank. Все права защищены.</p>
-        <p>Сделано в Волжском Политихеническом Техникуме.</p>
+    <footer class="footer-class">
+        <p class="footer-text">&copy; 2024 My Piggy Bank. Все права защищены.</p>
+        <p class="footer-text">Сделано в Волжском Политихеническом Техникуме.</p>
     </footer>
+
+
+    <!-- Модальное окно для туториала -->
+    <div id="tutorial-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="modal-title">Как использовать Piggy Bank</h2>
+            <p class="modal-text">Piggy Bank - это приложение для экономии денег. Оно поможет вам отслеживать свои расходы и доходы, а также достигать ваших целей.</p>
+            <ol class="tutorial-steps">
+                <li class="tutorial-step">Нажмите "Добавить Копилку" и создайте свою первую копилку</li>
+                <li class="tutorial-step">Введите сумму, которую вы хотите сэкономить, и выберите цель</li>
+                <li class="tutorial-step">Следите за вашим прогрессом с помощью отчета</li>
+                <li class="tutorial-step">Вы можете редактировать и удалять свои копилки</li>
+            </ol>
+            <p class="modal-text">Если у вас возникнут вопросы, вы можете найти ответы в разделе "Часто задаваемые вопросы"</p>
+        </div>
+    </div>
 
     <script src="scripts/home.js" defer></script>
 </body>
+
 </html>

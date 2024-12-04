@@ -2,8 +2,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap");
 :root {
   --primary-color: #f3ad21; /* Определяем основной цвет для удобного изменения */
-  --background-color: #f4f4f4;
-  --text-color: #333;
+  --highlight-color: #FFC107;
+  --background-color-light: #f4f4f4;
+  --background-color-dark: #212121;
+  --text-color-light: #333;
+  --text-color-dark: #fff;
+  --border-color: #333;
 }
 
 body {
@@ -11,8 +15,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--background-color-light);
+  color: var(--text-color-light);
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -48,7 +52,7 @@ body {
 
 #navigation a {
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--text-color-light);
   transition: color 0.3s ease;
   display: block;
 }
@@ -64,18 +68,15 @@ body {
   justify-content: center;
   margin-bottom: 20px;
 }
-
 .theme-switch input[type=checkbox] {
   display: none;
 }
-
 .theme-switch label {
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 20px;
   transition: background-color 0.3s ease;
 }
-
 .theme-switch input[type=checkbox]:checked + label {
   background-color: var(--primary-color);
 }
@@ -161,6 +162,10 @@ button {
   overflow-y: auto;
 }
 
+.faq-answer.active {
+  display: block;
+}
+
 .faq-answer.show {
   display: block;
   opacity: 1;
@@ -186,10 +191,6 @@ body.dark .action-button:hover {
   background-color: var(--primary-color);
 }
 
-body.dark #username {
-  color: #333;
-}
-
 /* Стили футера */
 footer {
   display: flex;
@@ -201,11 +202,11 @@ footer {
   left: 0;
   flex: 0 0 auto;
   width: 100%;
-  background-color: #212121;
-  color: #fff;
-  padding: 50px 0px;
-  text-align: center;
-  border-top: 1px solid #333;
+  background-color: #212121; /* Цвет фона футера */
+  color: #fff; /* Цвет текста футера */
+  padding: 50px 0px; /* Отступы внутри футера */
+  text-align: center; /* Выравнивание текста по центру */
+  border-top: 1px solid var(--border-color); /* Цвет верхней границы футера */
 }
 
 /* Адаптивные стили */
@@ -256,51 +257,6 @@ footer {
     padding: calc(5px + 2 * (100vw - 320px) / 1920) calc(10px + 2 * (100vw - 320px) / 1920);
   }
 }
-.faq-answer {
-  display: none; /* Скрываем по умолчанию */
-  word-break: break-word; /* Разрыв слов при необходимости */
-  overflow-wrap: break-word; /* Дополнительное свойство для надежности */
-  transition: opacity 0.3s ease, max-height 0.3s ease;
-  width: calc(100% - 20px); /* Ширина, с учетом отступов */
-  overflow-y: auto;
-}
-
-.faq-answer p {
-  max-width: 90%; /* Ограничение ширины текста */
-  margin: 0 auto; /* Центрирование текста по горизонтали */
-  word-wrap: break-word; /* Разрыв слов при необходимости */
-}
-
-.faq-answer.show {
-  display: block; /* Показываем, если есть класс 'show' */
-}
-
-.file-upload {
-  position: relative; /* Necessary for absolute positioning of the input */
-  display: inline-block;
-}
-
-.file-upload-label {
-  display: inline-block;
-  padding: 5px 20px;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.875em;
-}
-
-.file-upload input[type=file] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0; /* Hide the default input */
-  width: 100%;
-  height: 100%;
-  cursor: pointer; /* Ensure the area is clickable */
-}
-
 /* Стили для модального окна */
 .modal {
   position: fixed;

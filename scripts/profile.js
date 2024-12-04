@@ -73,6 +73,7 @@ function createPiggyBank(name, goal, start, image, description, id, goalDate) {
     renderPiggyBanks();
     clearForm();
     savePiggyBanks();
+    checkAchievements(piggyBanks);
 }
 function savePinnedPiggyBanks() {
     localStorage.setItem('pinnedPiggyBanks', JSON.stringify(piggyBanks.filter(bank => bank.isPinned)));
@@ -112,7 +113,7 @@ function createPiggyBankElement(piggyBank) {
     piggyBankEl.dataset.id = piggyBank.id;
     piggyBankEl.innerHTML = `
         <h3>${piggyBank.name}</h3>
-        <img class="piggy-bank-image" src="${piggyBank.image || '/images/no-image.png'}" alt="${piggyBank.name}">
+       <img class="piggy-bank-image" src="${piggyBank.image && piggyBank.image.trim() !== '' ? piggyBank.image : 'https://i.postimg.cc/C5KJfZgQ/image.png'}" alt="${piggyBank.name}">
         <div class="progress-bar">
             <div class="progress-bar-fill"></div>
             <div class="progress-text"></div>
@@ -199,7 +200,7 @@ function handleTransaction(bank, amountInput, balanceSpan, type) {
     bank.current += (type === 'add' ? amount : -amount);
     bank.transactions.push({ amount, date: new Date(), type });
     amountInput.value = '';
-    balanceSpan.textContent = bank.current.toFixed(2); // Fix for potential floating-point errors
+    balanceSpan.textContent = bank.current.toFixed(2);
     updateProgressBar(bank);
     updateStatistics(piggyBanks);
     updateLeaderboard();
@@ -316,12 +317,11 @@ function validateForm() {
     const start = parseFloat(piggyBankStartInput.value);
     const goalDate = piggyBankGoalDateInput.value;
 
-    const nameError = document.getElementById('piggy-bank-name-error'); // Use more descriptive IDs
+    const nameError = document.getElementById('piggy-bank-name-error');
     const goalError = document.getElementById('piggy-bank-goal-error');
     const startError = document.getElementById('piggy-bank-start-error');
     const goalDateError = document.getElementById('piggy-bank-goal-date-error');
 
-    // Clear previous errors
     clearErrorMessages();
 
     if (!name) {
@@ -336,8 +336,12 @@ function validateForm() {
         showError(startError, 'Начальная сумма должна быть числом больше или равно 0');
         isValid = false;
     }
+    if (start > goal && goal > 0) {  // Проверка на превышение начальной суммы над целью
+        showError(startError, 'Начальная сумма не может быть больше цели');
+        isValid = false;
+    }
     if (goalDate && !isValidDate(goalDate)) {
-        showError(goalDateError, 'Неверный формат даты');
+        showError(goalDateError, 'Неверный формат даты (дд.мм.гггг)');
         isValid = false;
     }
     return isValid;
@@ -351,14 +355,15 @@ function showError(element, message) {
 function clearErrorMessages() {
     const errorMessages = document.querySelectorAll('.error-message');
     errorMessages.forEach(element => {
-      element.textContent = '';
-      element.style.display = 'none';
+        element.textContent = '';
+        element.style.display = 'none';
     });
 }
 
-
 function isValidDate(dateString) {
-    return !isNaN(new Date(dateString).getTime()); // More robust date validation
+    const today = new Date();
+    const date = new Date(`${dateString}T00:00:00.000Z`);
+    return date instanceof Date && isFinite(date) && date >= today;
 }
 
 // Save piggy bank
@@ -1028,3 +1033,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+function showAchievementNotification(achievementName, description, imagePath) {
+    const notification = document.createElement('div');
+    notification.classList.add('achievement-notification');
+    notification.innerHTML = `
+        <img src="${imagePath}" alt="${achievementName}">
+        <h3>${achievementName}</h3>
+        <p>${description}</p>
+    `;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 500);
+    }, 3000); // Показать уведомление 3 секунды
+}
