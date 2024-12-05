@@ -932,11 +932,11 @@ body.dark #navigation a {
   #leaderboard {
     width: 80%;
   }
-  #welcome-message {
-    font-size: 1em;
-  }
   h1 {
     font-size: 1.5em;
+  }
+  #welcome-message {
+    font-size: 1em;
   }
   #add-piggy-bank {
     padding: 10px;

@@ -18,7 +18,18 @@
 *::after {
   box-sizing: border-box; // Устанавливает box-sizing для всех элементов
 }
-
+h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+#welcome-message {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  transition: color 0.3s ease;
+}
 body {
   font-family: "Rubik Mono One", monospace;
   font-size: 16px;
@@ -77,7 +88,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 1.25rem 0px;
 
   input[type="checkbox"] {
     display: none; // Скрыть checkbox
@@ -256,18 +267,27 @@ footer {
 
 /* Адаптивные стили */
 @media screen and (max-width: 600px) {
+  h1{
+    font-size: 1.5em;
+  }
+  #welcome-message{
+    font-size: 1em;
+  }
   body {
     font-size: calc(0.8em + (1vw - 0.8em) * (100vw - 600px) / (1200 - 600));
   }
-  
+  .main-content {
+    padding: calc(15px + (25 - 15) * (100vw - 600px) / (1200 - 600));
+  }
   section {
-    padding: 15px;
+    margin: 0;
+    font-size: 0.75em;
+
   }
 
-  .hero h2 {
+  .hero h2,.faq-title {
     font-size: 1.25em;
   }
-
   .hero p {
     font-size: 0.875em;
   }
@@ -276,34 +296,20 @@ footer {
     font-size: 0.75em;
   }
 
-  button {
+  button, .action-button  {
     padding: calc(5px + 2 * (100vw - 320px) / 1920) calc(10px + 2 * (100vw - 320px) / 1920);
+    font-size: 0.85em;
   }
-}
-.dark {
-  --background-color: #212121;
-  --text-color: #fff;
-  --border-color: #333;
-}
-
-.light {
-  --background-color: #f4f4f4;
-  --text-color: #333;
-  --border-color: #ddd;
-}
-
-body {
-  background-color: var(--background-color);
-  color: var(--text-color);
 }
 
 .tooltip {
   position: relative;
   display: inline-block;
+
 }
 .tooltip-icon {
-  width: 5.25rem;
-  height: 5.25rem;
+  width: 4.25rem;
+  height: 4.25rem;
   background-image: url(https://img.icons8.com/?size=100&id=67560&format=png&color=000000);
   background-repeat: no-repeat;
   background-size: contain;
@@ -315,14 +321,19 @@ body {
 .tooltip-text {
   position: absolute;
   display: none;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--text-color-light);
   border-radius: 5px;
   padding: 20px;
   bottom: 150%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
+}
+.dark .tooltip-text{
+  color: var(--text-color-dark);
+  background-color: var(--background-color-dark);
 }
 .tooltip-active .tooltip-text {
   display: block;
@@ -332,8 +343,7 @@ body {
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  background-color: var(--background-color);
+  background-color: #fff;
   color: var(--text-color);
   text-align: center;
-  border-top: 1px solid var(--border-color);
 }
