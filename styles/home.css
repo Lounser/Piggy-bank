@@ -28,8 +28,12 @@ h1 {
   font-size: 1.5em;
   margin-bottom: 20px;
   text-align: center;
-  color: #333;
+  color: var(--text-color-light);
   transition: color 0.3s ease;
+}
+
+body.dark #welcome-message {
+  color: var(--text-color-dark);
 }
 
 body {
@@ -76,12 +80,18 @@ body {
   margin: 0 10px;
 }
 
-.nav-link {
-  text-decoration: none;
-  color: var(--text-color-light);
-  transition: color 0.3s ease;
+.nav-icon {
+  filter: invert(0);
 }
-.nav-link:hover {
+
+.dark .nav-icon {
+  filter: invert(1);
+}
+
+.dark .nav-link {
+  color: var(--text-color-dark);
+}
+.dark .nav-link:hover {
   color: var(--highlight-color);
 }
 

@@ -58,10 +58,16 @@ body {
   display: block;
 }
 
+.dark #navigation a {
+  color: var(--text-color-dark);
+}
+
 #navigation a:hover {
   color: var(--primary-color);
 }
-
+.dark #user-image-preview{
+  background: #fff;
+}
 /* Стили переключателя тем */
 .theme-switch {
   display: flex;
@@ -132,47 +138,23 @@ section {
 
 /* Стили кнопок */
 button {
-  display: inline-block;
-  padding: 7px 30px;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 30px;
   background-color: var(--primary-color);
   color: white;
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s ease;
+  gap: 10px;
 }
 
 #save-settings:hover {
   background-color: #eea30d;
 }
 
-/* Стили FAQ */
-#faq {
-  flex-wrap: wrap;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 20px;
-  padding: 50px;
-  line-height: 30px;
-  font-size: clamp(0.8rem, 1.04vw, 1.04rem);
-}
-
-.faq-answer {
-  display: none; /* Скрываем по умолчанию */
-  word-break: break-word; /* Разрыв слов при необходимости */
-  overflow-wrap: break-word; /* Дополнительное свойство для надежности */
-  transition: opacity 0.3s ease, max-height 0.3s ease;
-  width: calc(100% - 20px); /* Ширина, с учетом отступов */
-  overflow-y: auto;
-
-}
-.faq-answer.active {
-  display: block;
-}
-.faq-answer.show {
-  display: block;
-  opacity: 1;
-}
 
 /* Стили темной темы */
 body.dark {
@@ -193,7 +175,13 @@ body.dark .action-button {
 body.dark .action-button:hover {
   background-color: var(--primary-color);
 }
+.nav-icon{
+  filter:invert(0);
+}
 
+.dark .nav-icon {
+  filter: invert(1);
+}
 /* Стили футера */
 footer {
   display: flex;
@@ -249,10 +237,6 @@ footer {
     font-size: 0.875em;
   }
 
-  #save-settings {
-    padding: 10px 15px;
-    font-size: 0.875em;
-  }
 
   footer {
     font-size: 0.75em;
@@ -260,10 +244,13 @@ footer {
 
   input #username {
     width: 100%;
+    color: #333;
   }
 
   button {
-      padding: calc(5px + 2 * (100vw - 320px) / 1920) calc(10px + 2 * (100vw - 320px) / 1920);
+    padding: calc(5px + 2 * (100vw - 320px) / 1920) calc(10px + 2 * (100vw - 320px) / 1920);
+    font-size: 0.85em;
+    width: 100%;
   }
 }
 

@@ -40,18 +40,17 @@ function checkAchievements(piggyBank) {
     const piggyBankId = piggyBank.id;
     const piggyBankAmount = piggyBank.current; // Используем текущее значение
     const achievementsList = Object.entries(achievements);
-    
-    achievementsList.forEach(([name, achievement]) => {
+    const achievementsHTML = achievementsList.map(([name, achievement]) => {
         if (piggyBankAmount >= achievement.goal) {
             showAchievementNotification(name); // Уведомление о достижении
-            // Здесь можно удалять достижение или только информировать о новом
+            return `<img class="achievement" src="${achievement.imagePath}" alt="${name}" title="${name}">`;
         }
-    });
+        return '';
+    }).join('');
     
-    // Обновление интерфейса достижений
     const achievementsEl = document.getElementById(`achievements-${piggyBankId}`);
     if (achievementsEl) {
-        achievementsEl.innerHTML = achievementsHTML; // Не забываем добавить HTML достижений
+        achievementsEl.innerHTML = achievementsHTML;
     }
 }
 function generateUUID() {
@@ -154,18 +153,11 @@ function createPiggyBankElement(piggyBank) {
         <p>Цель: ${piggyBank.goal}₽</p>
         <p>Текущий баланс: <span class="current-balance">${piggyBank.current}</span>₽</p>
         <p class="description">Описание: ${piggyBank.description || ''}</p>
-        
-        <div class="burger-menu">
-            <button class="burger-button">☰</button>
-        </div>
-
-        <div class="actions-container" style="display: block;">
+        <div class="actions-container">
             <button class="edit-button">Редактировать</button>
             <button class="delete-button">Удалить</button>
             <button class="copy-button">Копировать</button>
-            <button class="duplicate-button">Дублировать</button>
         </div>
-
         <div class="add-amount-container">
             <input type="number" class="add-amount" placeholder="Добавить " min="0.01" step="0.01">
             <button class="add-button">+</button>
@@ -179,13 +171,13 @@ function createPiggyBankElement(piggyBank) {
         <canvas data-id="${piggyBank.id}" class="transactions-chart"></canvas>
     `;
 
-    const burgerButton = piggyBankEl.querySelector('.burger-button');
+    // Добавляем кнопку "Закрепить/Открепить"
     const actionsContainer = piggyBankEl.querySelector('.actions-container');
-
-    burgerButton.addEventListener('click', () => {
-        const isVisible = actionsContainer.style.display === 'block';
-        actionsContainer.style.display = isVisible ? 'none' : 'block'; // Переключаем видимость действий
-    });
+    const pinButton = document.createElement('button');
+    pinButton.classList.add('pin-button');
+    pinButton.dataset.pinned = piggyBank.isPinned; // Добавляем атрибут данных
+    pinButton.textContent = piggyBank.isPinned ? 'Открепить' : 'Закрепить';
+    actionsContainer.appendChild(pinButton);
 
     const copyButton = piggyBankEl.querySelector('.copy-button');
     copyButton.addEventListener('click', () => {
@@ -193,12 +185,16 @@ function createPiggyBankElement(piggyBank) {
         alert('ID копилки скопирован в буфер обмена');
     });
 
-    const duplicateButton = piggyBankEl.querySelector('.duplicate-button');
-    duplicateButton.addEventListener('click', () => {
-        const duplicatePiggyBank = { ...piggyBank, id: generateUUID() };
-        piggyBanks.push(duplicatePiggyBank);
-        renderPiggyBanks();
-    });
+    // // Добавляем функционал для кнопок "Добавить" и "Убавить"
+    // const addAmountInput = piggyBankEl.querySelector('.add-amount');
+    // const addAmountButton = piggyBankEl.querySelector('.add-button');
+    // addAmountButton.addEventListener('click', () => {
+    //     const addAmount = Number(addAmountInput.value);
+    //     if (!isNaN(addAmount) && addAmount !== 0) {
+    //         addTransaction(piggyBank, addAmount);
+    //     }
+    //     addAmountInput.value = '';
+    // });
 
     updateTransactionsList(piggyBank, piggyBankEl);
     showGoalDate(piggyBank, piggyBankEl);
@@ -207,7 +203,6 @@ function createPiggyBankElement(piggyBank) {
 
     return piggyBankEl;
 }
-
 function addPinnedClass(piggyBankEl, isPinned) {
     if (isPinned) {
         piggyBankEl.classList.add('pinned');
@@ -239,25 +234,7 @@ function attachPiggyBankListeners(piggyBankEl, piggyBank) {
     });
   }
 }
-function addFilterListeners(piggyBanksContainer) {
-    const filterSelect = piggyBanksContainer.querySelector('.filter-select');
-    filterSelect.addEventListener('change', () => {
-        const filter = filterSelect.value;
-        const piggyBanks = getFilteredPiggyBanks(filter);
-        renderPiggyBanks(piggyBanks);
-    });
-}
 
-function getFilteredPiggyBanks(filter) {
-    switch (filter) {
-        case 'more':
-            return piggyBanks.slice().sort((a, b) => b.current - a.current);
-        case 'less':
-            return piggyBanks.slice().sort((a, b) => a.current - b.current);
-        default:
-            return piggyBanks;
-    }
-}
 function showGoalDate(piggyBank, piggyBankEl) {
     const goalDateSpan = piggyBankEl.querySelector('.goal-date');
     if (piggyBank.goalDate) {
@@ -283,19 +260,9 @@ function addTransaction(piggyBank, amount) {
     createTransactionsChart(piggyBank); // Перерисовываем график
 
     // Теперь добавляем вызов функции для проверки достижений
-    checkAchievements(piggyBank, showAchievementNotification); 
+    checkAchievements(piggyBank); 
 }
 
-function showAchievementNotification(name) {
-    alert(`Поздравляем! Вы достигли достижения: ${name}`);
-}
-
-
-/**
- * Add event listeners for adding and subtracting money to a piggy bank
- * @param {HTMLElement} piggyBankEl - HTML element of the piggy bank
- * @param {Object} piggyBank - piggy bank object
- */
 function addTransactionListeners(piggyBankEl, piggyBank) {
     const addButton = piggyBankEl.querySelector('.add-button');
     const addAmountInput = piggyBankEl.querySelector('.add-amount');
@@ -594,7 +561,37 @@ if (localStorage.getItem('darkMode') === 'true') {
         .forEach(el => el.classList.add('dark'));
     document.querySelectorAll('.fa-sun, .fa-moon').forEach(icon => icon.classList.add('light'));
 }
+// Apply filters
+document.getElementById('apply-filters').addEventListener('click', () => {
+    const nameFilter = document.getElementById('name-filter').value.toLowerCase();
+    const goalFilter = document.getElementById('goal-filter').value;
 
+    // Сортируем массив piggyBanks, а не фильтруем
+    piggyBanks.sort((a, b) => {
+        // Сначала сортируем по имени (если фильтр задан)
+        if (nameFilter !== '') {
+            const nameA = a.name.toLowerCase();
+            const nameB = b.name.toLowerCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+        }
+
+        // Затем сортируем по цели (если фильтр задан)
+        if (goalFilter !== '') {
+            if (goalFilter === 'less') {
+                return a.current - b.current; // По возрастанию текущей суммы
+            } else if (goalFilter === 'more') {
+                return b.current - a.current; // По убыванию текущей суммы
+            }
+        }
+
+        // Если фильтры не заданы, оставляем порядок без изменений
+        return 0;
+    });
+
+    renderPiggyBanks(piggyBanks); // Перерисовываем с новым порядком
+});
+// Update statistics
 function updateStatistics(piggyBanksToDisplay) {
     if (piggyBanksToDisplay.length === 0) {
         totalAmountEl.textContent = '0';
@@ -950,6 +947,36 @@ function createDistributionChart(piggyBanks) {
         });
     
         renderPiggyBanks(piggyBanks); // Перерисовываем с новым порядком
+    });
+    document.getElementById('apply-filters').addEventListener('click', () => {
+        const nameFilter = document.getElementById('name-filter').value.toLowerCase();
+        const goalFilter = document.getElementById('goal-filter').value;
+    
+        // Разделяем имя фильтра по запятой и убираем лишние пробелы
+        const nameFilters = nameFilter.split(',').map(name => name.trim()).filter(name => name !== '');
+    
+        // Если поле фильтра пустое, возвращаем все копилки
+        if (nameFilters.length === 0) {
+            renderPiggyBanks(piggyBanks); // Показываем все копилки
+            return;
+        }
+    
+        // Фильтруем копилки
+        let filteredBanks = piggyBanks.filter(bank => {
+            const matchesName = nameFilters.some(name => bank.name.toLowerCase().includes(name));
+            let matchesGoal = true;
+    
+            // Проверяем цель только если выбран фильтр
+            if (goalFilter === 'less') {
+                matchesGoal = bank.current < bank.goal;
+            } else if (goalFilter === 'more') {
+                matchesGoal = bank.current >= bank.goal;
+            }
+    
+            return matchesName && matchesGoal;
+        });
+    
+        renderPiggyBanks(filteredBanks); // Перерисовываем отфильтрованные копилки
     });
     const config = {
         type: 'doughnut',
