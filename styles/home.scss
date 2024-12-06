@@ -27,8 +27,12 @@ h1 {
   font-size: 1.5em;
   margin-bottom: 20px;
   text-align: center;
-  color: #333;
+  color: var(--text-color-light);
   transition: color 0.3s ease;
+}
+
+body.dark #welcome-message {
+  color: var(--text-color-dark);
 }
 body {
   font-family: "Rubik Mono One", monospace;
@@ -73,11 +77,16 @@ body {
 .nav-item {
   margin: 0 10px;
 }
+.nav-icon{
+  filter:invert(0);
+}
 
-.nav-link {
-  text-decoration: none;
-  color: var(--text-color-light);
-  transition: color 0.3s ease;
+.dark .nav-icon {
+  filter: invert(1);
+}
+
+.dark .nav-link {
+  color: var(--text-color-dark);
 
   &:hover {
     color: var(--highlight-color);

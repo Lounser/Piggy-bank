@@ -13,12 +13,11 @@
     <header>
         <nav id="navigation">
             <ul>
-                <li><a href="../profile.html"><img src="https://img.icons8.com/?size=100&id=R2rV4MQlV0ot&format=png&color=000000" alt=" " width="24" height="24">Профиль </a></li>
-                <li><a href="../index.html"><img src="https://img.icons8.com/?size=100&id=jDwpGuHnarDq&format=png&color=000000" alt=" " width="24" height="24">Главная </a></li>
-                <li><a href="../settings.html"><img src="https://img.icons8.com/?size=100&id=N1xaXJg6g2Eq&format=png&color=000000" alt=" " width="24" height="24">Параметры </a></li>
+                <li><a href="../profile.html"><img src="https://img.icons8.com/?size=100&id=R2rV4MQlV0ot&format=png&color=000000" alt=" " width="24" height="24" class="nav-icon">Профиль </a></li>
+                <li><a href="../index.html"><img src="https://img.icons8.com/?size=100&id=jDwpGuHnarDq&format=png&color=000000" alt=" " width="24" height="24" class="nav-icon">Главная </a></li>
+                <li><a href="../settings.html"><img src="https://img.icons8.com/?size=100&id=N1xaXJg6g2Eq&format=png&color=000000" alt=" " width="24" height="24" class="nav-icon">Параметры </a></li>
             </ul>
         </nav>
-        <h3 style="margin-bottom: 1rem;">Настройки</h3>
         <div class="theme-switch">
             <input type="checkbox" id="theme-switch-checkbox">
             <label for="theme-switch-checkbox">Темная тема</label>
@@ -27,7 +26,7 @@
 
     <main>
         <section id="settings">
-            <h2>Настройки</h2>
+            <h2>Параметры</h2>
             <div class="setting">
                 <label for="disable-profile-charts">Выключить графики на странице профиля:</label>
                 <input type="checkbox" id="disable-profile-charts">
@@ -37,30 +36,29 @@
                 <input type="checkbox" id="disable-transaction-charts">
             </div>
             <div class="setting">
+                <label for="disable-delete-confirmation">Отключить подтверждение удаления:</label>
+                <input type="checkbox" id="disable-delete-confirmation">
+            </div>
+            <div class="setting">
                 <label for="username">Имя пользователя:</label>
-                <input type="text" id="username" placeholder="Введите ваше имя">
+                <input type="text" id="username" name="username" value="" required style="color: #333;" placeholder="Введите ваше имя">
             </div>
             <div class="setting">
                 <label for="user-icon">Выберите иконку пользователя:</label>
-                <!-- <label for="user-image-upload">Загрузите свою иконку:</label> -->
                 <div class="file-upload">
                     <label for="user-image-upload" class="file-upload-label">Выберите иконку</label>
                     <input type="file" id="user-image-upload" accept="image/*">
-                  </div>
+                </div>
                 <p>Предпросмотр:</p>
                 <img id="user-image-preview" src="#" alt="" style="max-width: 100px; max-height: 100px; display: none;">
-            </select>
-        </div>
-        <button id="remove-user-image">Удалить изображение</button> </div>
-    </div>
-            <button id="save-settings">Сохранить настройки</button>
+            </div>
+            <button id="remove-user-image">Удалить изображение</button>
         </section>
     </main>
     <footer>
         <p>&copy; 2024 My Piggy Bank. Все права защищены.</p>
         <p>Сделано в Волжском Политихеническом Техникуме.</p>
     </footer>
-
-    <script src="scripts/settings.js"></script> 
 </body>
 </html>
+
